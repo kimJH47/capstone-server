@@ -24,6 +24,8 @@ public class Bucket {
 
     @Enumerated(EnumType.STRING)
     private BucketStatus bucketStatus;
+    @Enumerated(EnumType.STRING)
+    private BucketPrivacyStatus bucketPrivacyStatus;
 
     private LocalDateTime uploadTime;
     private LocalDateTime modifiedTime;

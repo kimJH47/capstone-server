@@ -4,19 +4,16 @@ package capstone.server.domain.sns;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
-public class Comment {
-
+public class Memo {
     @Id
     @GeneratedValue
-    @Column(name = "comment_id")
+    @Column(name = "memo_id")
     private Long id;
     private String content;
     private LocalDateTime uploadTime;
@@ -27,10 +24,5 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-
-
-
-
 }
 
