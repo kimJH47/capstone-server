@@ -5,7 +5,6 @@ import capstone.server.domain.image.ProfileImage;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 
 @Entity
@@ -19,20 +18,12 @@ public class Profile {
     @Id
     @Column(name = "profile_id")
     private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Column
     private short age;
 
-    @OneToMany(mappedBy = "profile")
-    private List<ProfileImage> profileImages;
-
-
-
-
+    @OneToOne
+    @JoinColumn(name = "profile_image_id")
+    private ProfileImage profileImage;
 
 
 }

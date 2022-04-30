@@ -3,7 +3,6 @@ package capstone.server.domain.bucket;
 import capstone.server.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,26 +10,23 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @Getter
-@Setter
 public class Bucket {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "bucket_name")
+    @Column(name = "bucket_id")
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column
-    private String title;
+    private String content;
 
     @Enumerated(EnumType.STRING)
     private BucketStatus bucketStatus;
 
-    @Column
     private LocalDateTime uploadTime;
+    private LocalDateTime modifiedTime;
 
 
 
