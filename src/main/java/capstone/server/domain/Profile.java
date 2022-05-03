@@ -10,8 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@NoArgsConstructor
 public class Profile {
 
     @GeneratedValue
@@ -26,4 +25,9 @@ public class Profile {
     private ProfileImage profileImage;
 
 
+    @Builder
+    public Profile(short age, ProfileImage profileImage) {
+        this.age = age;
+        this.profileImage = profileImage;
+    }
 }

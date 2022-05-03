@@ -3,12 +3,12 @@ package capstone.server.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
+@NoArgsConstructor
 @Entity
 @Getter
-@Builder
 public class User {
 
     @GeneratedValue
@@ -44,4 +44,10 @@ public class User {
     @Column
     private String nickName;
 
+    @Builder
+    public User(Profile profile, String email, String nickName) {
+        this.profile = profile;
+        this.email = email;
+        this.nickName = nickName;
+    }
 }

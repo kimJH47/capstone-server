@@ -22,10 +22,10 @@ public class ChallengeParticipation {
 
 
     //양방향 매핑 고민
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -1,6 +1,8 @@
 package capstone.server.domain.bucket;
 
 import capstone.server.domain.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 public class Bucket {
 
@@ -17,7 +21,7 @@ public class Bucket {
     @Column(name = "bucket_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     private String content;
@@ -29,7 +33,5 @@ public class Bucket {
 
     private LocalDateTime uploadTime;
     private LocalDateTime modifiedTime;
-
-
 
 }

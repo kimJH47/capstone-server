@@ -18,10 +18,10 @@ public class Memo {
     private String content;
     private LocalDateTime uploadTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bucket_id")
     private Bucket bucket;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }

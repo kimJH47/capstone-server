@@ -20,7 +20,7 @@ public class SubChallenge {
 
     private LocalDateTime uploadTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 }

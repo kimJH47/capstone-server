@@ -18,11 +18,11 @@ public class Like {
     private Long id;
     private LocalDateTime uploadTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bucket_id")
     private Bucket bucket;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }
