@@ -41,6 +41,9 @@ public class User {
     @Column
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
     @Column
     private String nickName;
 

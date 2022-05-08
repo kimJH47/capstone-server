@@ -15,8 +15,8 @@ public class UserService {
 
 
     @Transactional
-    public Long join(Mem) {
-
+    public Long join() {
+        return null;
     }
 
 
