@@ -18,7 +18,7 @@ public class Profile {
     @Column(name = "profile_id")
     private Long id;
     @Column
-    private short age;
+    private Integer age;
 
     @OneToOne
     @JoinColumn(name = "profile_image_id")
@@ -26,7 +26,7 @@ public class Profile {
 
 
     @Builder
-    public Profile(short age, ProfileImage profileImage) {
+    public Profile(Integer age, ProfileImage profileImage) {
         this.age = age;
         this.profileImage = profileImage;
     }

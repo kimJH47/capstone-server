@@ -1,8 +1,6 @@
 package capstone.server.domain.image;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +10,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProfileImage {
 
     @GeneratedValue
@@ -21,7 +20,6 @@ public class ProfileImage {
     @Column(name = "profile_image_id")
     private Long id;
     private String location;
-    @Column
     private LocalDateTime uploadDate;
 
 

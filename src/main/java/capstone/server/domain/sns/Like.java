@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Table(name = "likes")
 public class Like {
 
     @Id
