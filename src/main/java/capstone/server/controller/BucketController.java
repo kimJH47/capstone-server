@@ -1,6 +1,7 @@
 package capstone.server.controller;
 
 
+import capstone.server.dto.BucketResponseDto;
 import capstone.server.dto.BucketSaveRequestDto;
 import capstone.server.service.BucketService;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 
 
 @Controller
@@ -23,18 +21,34 @@ public class BucketController {
 
     private final BucketService bucketService;
 
-    @PostMapping("/users")
-    public ResponseEntity<?> save(@RequestBody  @Valid BucketSaveRequestDto requestDto, BindingResult bindingResult) {
+    @PostMapping("/buckets")
+    public ResponseEntity<?> save(@RequestBody @Valid BucketSaveRequestDto requestDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
                                                  .get(0)
                                                  .getDefaultMessage();
+            System.out.println("BED REQUEST");
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
         bucketService.saveBucket(requestDto);
-        return ResponseEntity.ok()
-                             .body("버킷리스트 등록완료");
+        ResponseEntity<String> responseEntity = ResponseEntity.ok()
+                                                          .body("버킷리스트 등록완료");
+
+        return responseEntity;
+
+    }
+
+    @GetMapping("/buckets/{id}")
+    public ResponseEntity<?> findOne(@PathVariable Long id) {
+
+        BucketResponseDto findBucket = bucketService.findById(id);
+
+        ResponseEntity<BucketResponseDto> body = ResponseEntity.ok()
+                                                               .body(findBucket);
+
+
+        return body;
 
     }
 

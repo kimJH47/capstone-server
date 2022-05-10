@@ -3,6 +3,7 @@ package capstone.server.service;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
+import capstone.server.dto.BucketResponseDto;
 import capstone.server.dto.BucketSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
@@ -28,7 +29,17 @@ public class BucketService {
         bucketRepository.save(bucket);
     }
 
+    @Transactional(readOnly = true)
+    public BucketResponseDto findById(Long id) {
+        Bucket findBucket = bucketRepository.findById(id)
+                                            .orElseThrow(() -> new IllegalArgumentException("테이블에 버킷이 없습니다"));
+        return BucketResponseDto.builder()
+                         .content(findBucket.getContent())
+                         .bucketStatus(findBucket.getBucketStatus())
+                         .bucketPrivacyStatus(findBucket.getBucketPrivacyStatus())
+                         .modifiedTime(findBucket.getModifiedTime())
+                         .uploadTime(findBucket.getUploadTime())
+                         .build();
 
-
-
+    }
 }

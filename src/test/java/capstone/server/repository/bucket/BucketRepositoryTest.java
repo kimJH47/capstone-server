@@ -22,7 +22,6 @@ class BucketRepositoryTest {
     EntityManager entityManager;
 
     @Test
-
     public void 버킷등록_테스트() throws Exception {
         //given
         bucketRepository.save(Bucket.builder()
