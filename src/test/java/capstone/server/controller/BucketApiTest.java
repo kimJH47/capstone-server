@@ -3,10 +3,7 @@ package capstone.server.controller;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
-import capstone.server.domain.bucket.BucketStatus;
-import capstone.server.domain.bucket.SubBucketStatus;
 import capstone.server.dto.BucketSaveRequestDto;
-import capstone.server.dto.SubBucketSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,36 +84,6 @@ class BucketApiTest {
 
 
     }
-    @Test
-    @DisplayName("서브버킷 저장 API 테스트")
-    public void 서브버킷저장() throws Exception{
-        //given
 
-        Bucket bucket = Bucket.builder()
-                            .bucketStatus(BucketStatus.ONGOING)
-                            .modifiedTime(LocalDateTime.now())
-                            .uploadTime(LocalDateTime.now())
-                            .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
-                            .content("버킷제목")
-                            .build();
-        bucketRepository.save(bucket);
-        SubBucketSaveRequestDto request = SubBucketSaveRequestDto.builder()
-                                                                    .bucketId(1L)
-                                                                    .subBucketStatus(SubBucketStatus.ONGOING)
-                                                                    .modifiedTime(LocalDateTime.now())
-                                                                    .uploadTime(LocalDateTime.now())
-                                                                    .content("세부목표 내용입네다")
-                                                                    .build();
-
-
-        //when
-        ResultActions resultActions = mockMvc.perform(post("/api/sub-bucket").contentType(MediaType.APPLICATION_JSON)
-                                                                             .content(objectMapper.writeValueAsString(request)))
-                                             .andExpect(status().isOk())
-                                             .andDo(print());
-        //then
-        resultActions.andExpect(status().isOk());
-
-    }
 
 }

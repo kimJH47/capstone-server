@@ -1,7 +1,7 @@
 package capstone.server.dto;
 
-import capstone.server.domain.bucket.BucketPrivacyStatus;
-import capstone.server.domain.bucket.BucketStatus;
+
+import capstone.server.domain.bucket.SubBucketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,18 +9,15 @@ import lombok.Getter;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-
-@Builder
 @AllArgsConstructor
+@Builder
 @Getter
-public class BucketResponseDto {
+public class SubBucketResponseDto {
 
 
     private String content;
     @NotNull
-    private BucketStatus bucketStatus;
-    @NotNull
-    private BucketPrivacyStatus bucketPrivacyStatus;
+    private SubBucketStatus subBucketStatus;
     private LocalDateTime uploadTime;
     private LocalDateTime modifiedTime;
 

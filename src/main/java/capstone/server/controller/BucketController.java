@@ -44,11 +44,9 @@ public class BucketController {
 
         BucketResponseDto findBucket = bucketService.findById(id);
 
-        ResponseEntity<BucketResponseDto> body = ResponseEntity.ok()
-                                                               .body(findBucket);
 
-
-        return body;
+        return ResponseEntity.ok()
+                             .body(findBucket);
 
     }
 
