@@ -72,7 +72,6 @@ class BucketApiTest {
                                        .andExpect(status().isOk())
                                        .andDo(print());
         //then
-
         resultActions.andExpect(status().isOk());
 
         String s = bucketRepository.findById(1L)

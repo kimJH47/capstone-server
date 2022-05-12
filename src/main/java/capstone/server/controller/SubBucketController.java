@@ -37,7 +37,7 @@ public class SubBucketController {
         return responseEntity;
     }
 
-    @GetMapping("sub-bucket/{bucket-id}")
+    @GetMapping("/sub-bucket/{bucket-id}")
     public ResponseEntity<?> findByBucketId(@PathVariable("bucket-id") Long id) {
         List<SubBucketResponseDto> responseDtos = subBucketService.findByBucketId(id);
         return ResponseEntity.ok()
