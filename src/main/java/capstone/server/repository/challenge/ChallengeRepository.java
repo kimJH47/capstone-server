@@ -1,4 +1,4 @@
-package capstone.server.repository;
+package capstone.server.repository.challenge;
 
 import capstone.server.domain.challenge.Challenge;
 import org.springframework.data.jpa.repository.JpaRepository;
