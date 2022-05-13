@@ -1,7 +1,9 @@
-package capstone.server.dto;
+package capstone.server.dto.bucket;
 
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +23,9 @@ public class BucketResponseDto {
     private BucketStatus bucketStatus;
     @NotNull
     private BucketPrivacyStatus bucketPrivacyStatus;
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime uploadTime;
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime modifiedTime;
 
 }

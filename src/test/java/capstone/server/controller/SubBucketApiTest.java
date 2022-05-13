@@ -3,7 +3,7 @@ package capstone.server.controller;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.*;
-import capstone.server.dto.SubBucketSaveRequestDto;
+import capstone.server.dto.bucket.SubBucketSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
 import capstone.server.repository.bucket.SubBucketRepository;
@@ -98,12 +98,14 @@ public class SubBucketApiTest {
                                               .bucket(bucket)
                                               .build());
         }
+
+        //when
+        //then
         mockMvc.perform(get("/api/sub-bucket/1").accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andDo(print());
+               //.andExpect(jsonPath());
 
-        //when
 
-        //then
     }
 }

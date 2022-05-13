@@ -1,4 +1,4 @@
-package capstone.server.dto;
+package capstone.server.dto.bucket;
 
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;

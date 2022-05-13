@@ -1,8 +1,8 @@
 package capstone.server.controller;
 
 
-import capstone.server.dto.SubBucketResponseDto;
-import capstone.server.dto.SubBucketSaveRequestDto;
+import capstone.server.dto.bucket.SubBucketResponseDto;
+import capstone.server.dto.bucket.SubBucketSaveRequestDto;
 import capstone.server.service.SubBucketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

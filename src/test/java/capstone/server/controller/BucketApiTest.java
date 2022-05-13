@@ -3,7 +3,7 @@ package capstone.server.controller;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
-import capstone.server.dto.BucketSaveRequestDto;
+import capstone.server.dto.bucket.BucketSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

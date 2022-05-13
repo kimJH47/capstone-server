@@ -3,8 +3,8 @@ package capstone.server.service;
 
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.SubBucket;
-import capstone.server.dto.SubBucketResponseDto;
-import capstone.server.dto.SubBucketSaveRequestDto;
+import capstone.server.dto.bucket.SubBucketResponseDto;
+import capstone.server.dto.bucket.SubBucketSaveRequestDto;
 import capstone.server.repository.bucket.BucketRepository;
 import capstone.server.repository.bucket.SubBucketRepository;
 import lombok.RequiredArgsConstructor;

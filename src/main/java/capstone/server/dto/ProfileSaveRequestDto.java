@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class ProfileSaveRequestDto {
+
     private int age;
     private String profileImage;
 

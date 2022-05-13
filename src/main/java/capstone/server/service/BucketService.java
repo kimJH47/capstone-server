@@ -3,8 +3,8 @@ package capstone.server.service;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
-import capstone.server.dto.BucketResponseDto;
-import capstone.server.dto.BucketSaveRequestDto;
+import capstone.server.dto.bucket.BucketResponseDto;
+import capstone.server.dto.bucket.BucketSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
 import lombok.RequiredArgsConstructor;
