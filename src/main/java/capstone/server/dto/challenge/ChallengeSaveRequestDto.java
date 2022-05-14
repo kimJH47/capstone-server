@@ -29,14 +29,15 @@ public class ChallengeSaveRequestDto {
     @NotNull
     @Size(max = 10)
     private Integer maxJoinNum;
+    private BucketPrivacyStatus challengePrivacyStatus;
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime uploadTime;
-
+    @JsonSerialize(using = ToStringSerializer.class)
+    private LocalDateTime modifiedTime;
     public Challenge toEntity() {
         /**
          * 챌린지 생성 기본값
          * - 챌린지 상태 : 진행중
-         * - 챌린지 공개여부 : 공개
          */
         return Challenge.builder()
                         .title(this.getTitle())
@@ -45,7 +46,7 @@ public class ChallengeSaveRequestDto {
                         .modifiedTime(this.getUploadTime())
                         .maxJoinNum(this.getMaxJoinNum())
                         .challengeStatus(BucketStatus.ONGOING)
-                        .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                        .challengePrivacyStatus(this.getChallengePrivacyStatus())
                         .build();
     }
 }

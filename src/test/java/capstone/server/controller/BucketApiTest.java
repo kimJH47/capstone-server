@@ -67,12 +67,11 @@ class BucketApiTest {
 
 
         //when
-        ResultActions resultActions = mockMvc.perform(post("/api/buckets").contentType(MediaType.APPLICATION_JSON)
-                                                                    .content(objectMapper.writeValueAsString(requestDto)))
-                                       .andExpect(status().isOk())
-                                       .andDo(print());
         //then
-        resultActions.andExpect(status().isOk());
+        ResultActions resultActions = mockMvc.perform(post("/api/buckets").contentType(MediaType.APPLICATION_JSON)
+                                                                          .content(objectMapper.writeValueAsString(requestDto)))
+                                             .andExpect(status().isOk())
+                                             .andDo(print());
 
         String s = bucketRepository.findById(1L)
                                    .stream()

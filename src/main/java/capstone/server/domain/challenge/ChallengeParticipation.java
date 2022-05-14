@@ -2,13 +2,19 @@ package capstone.server.domain.challenge;
 
 
 import capstone.server.domain.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ChallengeParticipation {
 
     @Id

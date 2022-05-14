@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -37,9 +36,9 @@ public class ChallengeController {
                              .body("챌린지 생성이 완료되었습니다");
     }
     //챌린지 참가 요청
-    @PostMapping("/challenge/{id}/join")
-    public ResponseEntity<?> challengeJoinRequest(@PathVariable Long id, ChallengeJoinRequestDto requestDto){
-        challengeService.join(id,requestDto);
+    @PostMapping("/challenge/join")
+    public ResponseEntity<?> challengeJoinRequest(ChallengeJoinRequestDto requestDto){
+        challengeService.join(requestDto);
         return ResponseEntity.ok()
                              .body("챌린지 참가요청이 완료되었습니다");
 
