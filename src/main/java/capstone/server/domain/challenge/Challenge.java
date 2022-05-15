@@ -26,7 +26,7 @@ public class Challenge {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User createAt;
+    private User user;
 
 
     private String title;
@@ -41,7 +41,7 @@ public class Challenge {
     private LocalDateTime modifiedTime;
 
     public void changeUser(User user) {
-        this.createAt = user;
+        this.user = user;
     }
 
 

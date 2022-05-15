@@ -6,6 +6,7 @@ import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
 import capstone.server.domain.challenge.JoinStatus;
 import capstone.server.domain.challenge.RoleType;
+import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
@@ -58,7 +59,7 @@ class ChallengeControllerTest {
     }
 
     @Test
-    @DisplayName("챌린지 생성 api 요청시 챌린지 생성이 완료되어야함")
+    @DisplayName("챌린지 생성 api 사용시 챌린지 생성이 완료되어야함")
     public void 챌린지생성_테스트() throws Exception{
         //given
         ChallengeSaveRequestDto requestDto = ChallengeSaveRequestDto.builder()
@@ -95,6 +96,51 @@ class ChallengeControllerTest {
         });
 
     }
+    @Test
+    @DisplayName("챌린지 참가 api 사용시 챌린지 참가가 완료되어야함")
+    public void 챌린지참가_테스트() throws Exception{
+        //given
+        User user = userRepository.findById(1L)
+                                  .get();
+        Challenge challenge = Challenge.builder()
+                                   .maxJoinNum(10)
+                                   .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                   .title("챌린지 제목")
+                                   .content("챌린지 내용")
+                                   .uploadTime(LocalDateTime.now())
+                                   .build();
+        challenge.changeUser(user);
+        challengeRepository.save(challenge);
+
+        ChallengeJoinRequestDto requestDto = ChallengeJoinRequestDto.builder()
+                                                               .challengeId(1L)
+                                                               .requestTime(LocalDateTime.now())
+                                                               .userId(1L)
+                                                               .build();
+        //when
+        //then
+        mvc.perform(post("/api/challenge/join").contentType(MediaType.APPLICATION_JSON)
+                                               .content(objectMapper.writeValueAsString(requestDto)))
+           .andExpect(status().isOk())
+           .andDo(print());
+
+        List<ChallengeParticipation> all = challengeParticipationRepository.findAll();
+        ChallengeParticipation challengeParticipation = all.get(0);
+
+        assertAll(() -> {
+            assertEquals(challengeParticipation.getId(),1L);
+            assertEquals(challengeParticipation.getRoleType(), RoleType.MEMBER);
+            assertEquals(challengeParticipation.getJoinStatus(), JoinStatus.WAIT);
+
+        });
+    }
+
+    /**
+     * 예외테스트 작성하기
+     * -참가인원이 풀방일 때
+     * -챌린지가 비공개일 때
+     *
+     */
 
 
 }
