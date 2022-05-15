@@ -10,8 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -21,13 +22,12 @@ public class ChallengeSaveRequestDto {
 
     @NotNull
     private Long userId;
-    @NotNull
-    @Size(max = 20)
+    @NotBlank
     private String title;
     @NotNull
     private String content;
     @NotNull
-    @Size(max = 10)
+    @Max(value = 10)
     private Integer maxJoinNum;
     private BucketPrivacyStatus challengePrivacyStatus;
     @JsonSerialize(using = ToStringSerializer.class)

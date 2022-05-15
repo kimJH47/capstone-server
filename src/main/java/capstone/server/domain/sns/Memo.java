@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 public class Memo {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "memo_id")
     private Long id;
     private String content;

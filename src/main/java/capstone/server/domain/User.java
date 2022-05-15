@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Builder
 public class User {
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "user_id")
     private Long id;

@@ -6,6 +6,7 @@ import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
 import capstone.server.domain.challenge.JoinStatus;
+import capstone.server.domain.challenge.RoleType;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
 import capstone.server.repository.UserRepository;
@@ -25,12 +26,14 @@ public class ChallengeService {
 
     @Transactional
     public void save(ChallengeSaveRequestDto requestDto) {
-        Challenge challenge = requestDto.toEntity();
         User findUser = userRepository.findById(requestDto.getUserId())
                                       .orElseThrow(() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다"));
+        Challenge challenge = requestDto.toEntity();
         challenge.changeUser(findUser);
 
-        Challenge save = challengeRepository.save(challenge);
+        challengeRepository.save(challenge);
+
+
         //챌린지참가 정보에 바로 추가하기
         challengeParticipationRepository.save(ChallengeParticipation.builder()
                                                                     .challenge(challenge)
@@ -38,6 +41,7 @@ public class ChallengeService {
                                                                     .joinTime(requestDto.getUploadTime())
                                                                     .requestTime(requestDto.getUploadTime())
                                                                     .joinStatus(JoinStatus.SUCCEEDED)
+                                                                    .roleType(RoleType.ADMIN)
                                                                     .build());
 
     }
@@ -59,6 +63,7 @@ public class ChallengeService {
                                                                     .user(findUser)
                                                                     .joinStatus(JoinStatus.WAIT)
                                                                     .requestTime(requestDto.getRequestTime())
+                                                                    .roleType(RoleType.MEMBER)
                                                                     .build());
 
 

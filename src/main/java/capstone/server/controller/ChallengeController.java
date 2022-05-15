@@ -4,11 +4,11 @@ import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
 import capstone.server.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
@@ -23,13 +23,16 @@ public class ChallengeController {
 
     //챌린지 생성
     @PostMapping("/challenge")
-    public ResponseEntity<?> createChallenge(@Valid ChallengeSaveRequestDto requestDto, BindingResult bindingResult) {
+    public ResponseEntity<?> createChallenge(@RequestBody @Valid ChallengeSaveRequestDto requestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
                                                  .get(0)
                                                  .getDefaultMessage();
             System.out.println("BED REQUEST");
-            return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
+            System.out.println("defaultMessage = " + defaultMessage);
+            return ResponseEntity.badRequest()
+                                 .body(defaultMessage);
+            //return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
         challengeService.save(requestDto);
         return ResponseEntity.ok()

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Profile {
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "profile_id")
     private Long id;

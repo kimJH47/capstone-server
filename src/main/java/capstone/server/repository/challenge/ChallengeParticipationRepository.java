@@ -19,7 +19,7 @@ public interface ChallengeParticipationRepository extends JpaRepository<Challeng
     //limit 걸어야함
     @Query("select chp from ChallengeParticipation chp " +
             "where chp.challenge =:challenge " +
-            "and chp.joinStatus=:joinSatatus")
+            "and chp.joinStatus=:joinStatus")
     List<ChallengeParticipation> findWithPagingByChallengeAndJoinStatus(@Param("challenge") Challenge challenge, @Param("joinStatus") JoinStatus joinStatus, Pageable pageable);
 
     default boolean isFullChallengeUsers(Challenge challenge) {
