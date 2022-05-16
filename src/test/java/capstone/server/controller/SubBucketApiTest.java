@@ -96,7 +96,7 @@ public class SubBucketApiTest {
                                               .subBucketStatus(SubBucketStatus.ONGOING)
                                               .modifiedTime(LocalDateTime.now())
                                               .bucket(bucket)
-                                              .build());
+                                               .build());
         }
 
         //when

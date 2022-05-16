@@ -27,7 +27,6 @@ public class SubBucketController {
             String defaultMessage = bindingResult.getAllErrors()
                                                  .get(0)
                                                  .getDefaultMessage();
-            System.out.println("BED REQUEST");
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
 

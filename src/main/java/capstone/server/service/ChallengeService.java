@@ -9,12 +9,16 @@ import capstone.server.domain.challenge.JoinStatus;
 import capstone.server.domain.challenge.RoleType;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
+import capstone.server.exception.CustomException;
+import capstone.server.exception.ErrorCode;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
 import capstone.server.repository.challenge.ChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,9 +56,10 @@ public class ChallengeService {
         Challenge findChallenge = challengeRepository.findById(requestDto.getChallengeId())
                                                      .orElseThrow((() -> new IllegalArgumentException("테이블에 챌린지가 존재하지 않습니다")));
         if (findChallenge.getChallengePrivacyStatus()
-                         .equals(BucketPrivacyStatus.PRIVATE) && challengeParticipationRepository.isFullChallengeUsers(findChallenge)) {
+                         .equals(BucketPrivacyStatus.PRIVATE) || challengeParticipationRepository.isFullChallengeUsers(findChallenge)) {
 
             //챌린지에 참가자리가 없거나 비공개 일 때 예외 던지기(ControllerAdvice)
+            throw new CustomException(ErrorCode.CHALLENGE_FULL_USERS);
         }
         User findUser = userRepository.findById(requestDto.getUserId())
                                                 .orElseThrow((() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다")));
@@ -76,4 +81,9 @@ public class ChallengeService {
 
 
     }
+
+    public List<Challenge> findAll() {
+        return challengeRepository.findAll();
+    }
+
 }

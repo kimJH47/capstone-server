@@ -100,18 +100,7 @@ class ChallengeControllerTest {
     @DisplayName("챌린지 참가 api 사용시 챌린지 참가가 완료되어야함")
     public void 챌린지참가_테스트() throws Exception{
         //given
-        User user = userRepository.findById(1L)
-                                  .get();
-        Challenge challenge = Challenge.builder()
-                                   .maxJoinNum(10)
-                                   .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
-                                   .title("챌린지 제목")
-                                   .content("챌린지 내용")
-                                   .uploadTime(LocalDateTime.now())
-                                   .build();
-        challenge.changeUser(user);
-        challengeRepository.save(challenge);
-
+        createChallenge(10, BucketPrivacyStatus.PUBLIC, "챌린지 제목", "챌린지 내용");
         ChallengeJoinRequestDto requestDto = ChallengeJoinRequestDto.builder()
                                                                .challengeId(1L)
                                                                .requestTime(LocalDateTime.now())
@@ -141,6 +130,39 @@ class ChallengeControllerTest {
      * -챌린지가 비공개일 때
      *
      */
+    @Test
+    @DisplayName("챌린지 참가인원이 꽉찾을때 예외 테스트")
+    public void challengeFullUsers_test() throws Exception{
+        //given
+        createChallenge(1, BucketPrivacyStatus.PUBLIC, "챌린지 제목", "챌린지 내용");
+        ChallengeJoinRequestDto requestDto = ChallengeJoinRequestDto.builder()
+                                                                    .challengeId(1L)
+                                                                    .requestTime(LocalDateTime.now())
+                                                                    .userId(1L)
+                                                                    .build();
+        //when
+        //then
+        mvc.perform(post("/api/challenge/join").contentType(MediaType.APPLICATION_JSON)
+                                               .content(objectMapper.writeValueAsString(requestDto)))
+           .andExpect(status().isOk())
+           .andDo(print());
+        //조회 Api 만들고 다시 테스트
+    }
+    private void createChallenge(int maxJoinNum, BucketPrivacyStatus privacyStatus, String title, String content) {
+        User user = userRepository.findById(1L)
+                                  .get();
+        Challenge challenge = Challenge.builder()
+                                   .maxJoinNum(maxJoinNum)
+                                   .challengePrivacyStatus(privacyStatus)
+                                   .title(title)
+                                   .content(content)
+                                   .uploadTime(LocalDateTime.now())
+                                   .build();
+        challenge.changeUser(user);
+        challengeRepository.save(challenge);
+    }
+
+
 
 
 }
