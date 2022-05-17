@@ -1,7 +1,7 @@
 package capstone.server.controller;
 
-import capstone.server.domain.challenge.Challenge;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
+import capstone.server.dto.challenge.ChallengeParticipationResponseDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
 import capstone.server.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
@@ -55,14 +55,18 @@ public class ChallengeController {
     }
 
     //기본 챌린지 조회
-    @GetMapping("/challenge")
+/*    @GetMapping("/challenge")
     public ResponseEntity<?> findAll() {
         List<Challenge> challenges = challengeService.findAll();
-    }
+        return null;
+    }*/
 
     @GetMapping("/challenge/{id}/users")
     public ResponseEntity<?> findChallengeUsersById(@PathVariable Long id) {
+        List<ChallengeParticipationResponseDto> responseDtos = challengeService.findUsers(id);
 
+        return ResponseEntity.ok()
+                             .body(responseDtos);
     }
     //유저 챌린지 참가 수락(또는 거절)
     //챌린지 참가 여부 조호

@@ -7,6 +7,7 @@ import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
 import capstone.server.domain.challenge.JoinStatus;
 import capstone.server.domain.challenge.RoleType;
+import capstone.server.dto.challenge.ChallengeParticipationResponseDto;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
 import capstone.server.exception.CustomException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +65,7 @@ public class ChallengeService {
         }
         User findUser = userRepository.findById(requestDto.getUserId())
                                                 .orElseThrow((() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다")));
+
         challengeParticipationRepository.save(ChallengeParticipation.builder()
                                                                     .challenge(findChallenge)
                                                                     .user(findUser)
@@ -82,8 +85,20 @@ public class ChallengeService {
 
     }
 
+    @Transactional(readOnly = true)
     public List<Challenge> findAll() {
         return challengeRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public List<ChallengeParticipationResponseDto> findUsers(Long id) {
+        Challenge challenge = challengeRepository.findById(id)
+                                                 .orElseThrow(() -> new IllegalArgumentException("테이블에 챌린지가 존재하지 않습니다"));
+        List<ChallengeParticipation> allByChallenge = challengeParticipationRepository.findAllByChallenge(challenge);
+        return allByChallenge.stream()
+                             .map(ChallengeParticipationResponseDto::new)
+                             .collect(Collectors.toList());
+
+
+    }
 }
