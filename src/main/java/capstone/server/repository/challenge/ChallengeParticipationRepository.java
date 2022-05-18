@@ -21,13 +21,16 @@ public interface ChallengeParticipationRepository extends JpaRepository<Challeng
     @Query("select chp from ChallengeParticipation chp " +
             "where chp.challenge =:challenge " +
             "and chp.joinStatus=:joinStatus")
-    List<ChallengeParticipation> findWithPagingByChallengeAndJoinStatus(@Param("challenge") Challenge challenge, @Param("joinStatus") JoinStatus joinStatus, Pageable pageable);
-    @Query("select chp from ChallengeParticipation chp join chp.challenge where chp.challenge=:challenge")
+    List<ChallengeParticipation> findWithPagingByChallengeAndJoinStatus(@Param("challenge") Challenge challenge,
+                                                                        @Param("joinStatus") JoinStatus joinStatus, Pageable pageable);
+    @Query("select chp from ChallengeParticipation chp join fetch chp.challenge where chp.challenge=:challenge")
     List<ChallengeParticipation> findAllByChallenge(@Param("challenge") Challenge challenge);
     default boolean isFullChallengeUsers(Challenge challenge) {
         int maxUsers = challenge.getMaxJoinNum();
-        return findWithPagingByChallengeAndJoinStatus(challenge,JoinStatus.SUCCEEDED, PageRequest.of(0, maxUsers)).size()==maxUsers;
+        return findWithPagingByChallengeAndJoinStatus(challenge, JoinStatus.SUCCEEDED,
+                PageRequest.of(0, maxUsers)).size() == maxUsers;
     }
+
 
 
 

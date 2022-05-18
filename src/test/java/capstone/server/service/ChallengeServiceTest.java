@@ -3,10 +3,13 @@ package capstone.server.service;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.challenge.Challenge;
+import capstone.server.domain.challenge.RoleType;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeParticipationResponseDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
+import capstone.server.exception.CustomException;
 import capstone.server.repository.UserRepository;
+import capstone.server.repository.challenge.ChallengeParticipationRepository;
 import capstone.server.repository.challenge.ChallengeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +34,8 @@ class ChallengeServiceTest {
     private UserRepository userRepository;
     @Autowired
     private ChallengeRepository challengeRepository;
+    @Autowired
+    private ChallengeParticipationRepository challengeParticipationRepository;
 
     @BeforeEach
     public void 테스트유저_생성() {
@@ -47,7 +52,7 @@ class ChallengeServiceTest {
     }
 
     @Test
-    @DisplayName("챌린지가 성공저긍로 저장되어야함")
+    @DisplayName("챌린지가 성공적로 저장되어야함")
     public void 챌린지저장_테스트() throws Exception{
         //given
         ChallengeSaveRequestDto requestDto = ChallengeSaveRequestDto.builder()
@@ -87,36 +92,57 @@ class ChallengeServiceTest {
                                                                                            .build())
                                                       .collect(Collectors.toList());
 
-        //when
         for (ChallengeJoinRequestDto dto : dtos) {
             challengeService.join(dto);
         }
+        //when
         List<ChallengeParticipationResponseDto> users = challengeService.findUsers(1L);
         //then
-        for (ChallengeParticipationResponseDto user : users) {
-            System.out.println(user.getUserId());
-            System.out.println(user.getChallengeId());
-            System.out.println(user.getJoinStatus());
+        ChallengeParticipationResponseDto responseDto = users.get(1);
+        Assertions.assertEquals(responseDto.getChallengeId(), 1L);
+        Assertions.assertEquals(responseDto.getRoleType(), RoleType.MEMBER);
+        Assertions.assertEquals(responseDto.getUserName(),"test1");
 
-        }
+
+        Challenge challenge = challengeRepository.findById(1L)
+                                                 .get();
+
 
     }
 
     @Test
-    @DisplayName("챌린지에 남은자리가 있는지 확인하는 테스트,boolean 으로 반환됨")
+    @DisplayName("챌린지에 자리가 없으면 예외가 발생하는 테스트")
     public void challengeFullUsers_test() throws Exception {
-
         //given
+        createChallenge();
+        List<User> all = userRepository.findAll();
+
+
+        //테스트 챌린지 최대인원 4명 / 유저 5명 참가
+        List<ChallengeJoinRequestDto> dtos = Stream.of(1, 2, 3, 4, 5)
+                                                   .map(value -> ChallengeJoinRequestDto.builder()
+                                                                                        .userId(Long.valueOf(value))
+                                                                                        .requestTime(LocalDateTime.now())
+                                                                                        .challengeId(1L)
+                                                                                        .build())
+                                                   .collect(Collectors.toList());
 
         //when
-
         //then
+        Assertions.assertThrows(CustomException.class, () -> {
+            dtos.stream()
+                .forEach(challengeJoinRequestDto -> challengeService.join(challengeJoinRequestDto));
+
+        });
+
+
+
     }
 
     private void createChallenge() {
-        challengeService.save(ChallengeSaveRequestDto.builder()
+         challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 1")
-                                                     .maxJoinNum(5)
+                                                     .maxJoinNum(4)
                                                      .uploadTime(LocalDateTime.now())
                                                      .modifiedTime(LocalDateTime.now())
                                                      .title("챌린지 제목")
