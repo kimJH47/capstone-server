@@ -68,6 +68,7 @@ public class ChallengeController {
         return ResponseEntity.ok()
                              .body(responseDtos);
     }
+
     //유저 챌린지 참가 수락(또는 거절)
     //챌린지 참가 여부 조호
     //챌린지 참가 유저 조회

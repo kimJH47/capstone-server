@@ -7,6 +7,7 @@ import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
 import capstone.server.domain.challenge.JoinStatus;
 import capstone.server.domain.challenge.RoleType;
+import capstone.server.dto.ChallengeJoinStatusRequestDto;
 import capstone.server.dto.challenge.ChallengeParticipationResponseDto;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
@@ -52,6 +53,12 @@ public class ChallengeService {
 
     }
 
+
+    /**
+     * 검증 할 것
+     * 1. 챌린지에 인원이 꽉찻는지
+     * 2. 챌린지 공개 여부
+     */
     @Transactional
     public void join(ChallengeJoinRequestDto requestDto) {
 
@@ -76,11 +83,6 @@ public class ChallengeService {
 
 
 
-        /**
-         * 검증 할 것
-         * 1. 챌린지에 인원이 꽉찻는지
-         * 2. 챌린지 공개 여부
-         */
 
 
     }
@@ -98,6 +100,15 @@ public class ChallengeService {
         return allByChallenge.stream()
                              .map(ChallengeParticipationResponseDto::new)
                              .collect(Collectors.toList());
+
+
+    }
+
+    @Transactional
+    public void changeJoinStatus(Long id,ChallengeJoinStatusRequestDto requestDto) {
+        ChallengeParticipation participation = challengeParticipationRepository.findById(id)
+                                                                               .orElseThrow(() -> new IllegalArgumentException("테이블에 참가정보가 존재하지 않습니다"));
+        participation.changeJoinStatus(requestDto.getUpdateJoinStatus());
 
 
     }

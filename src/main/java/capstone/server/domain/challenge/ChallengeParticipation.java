@@ -40,8 +40,10 @@ public class ChallengeParticipation {
     @Enumerated(EnumType.STRING)
     private JoinStatus joinStatus;
     //버킷완료 여부 객체 뭘쓸까...,
-    
 
+    public void changeJoinStatus(JoinStatus joinStatus) {
+        this.joinStatus = joinStatus;
+    }
 
 
 

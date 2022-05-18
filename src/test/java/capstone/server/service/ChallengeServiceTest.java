@@ -142,7 +142,7 @@ class ChallengeServiceTest {
     private void createChallenge() {
          challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 1")
-                                                     .maxJoinNum(4)
+                                                     .maxJoinNum(5)
                                                      .uploadTime(LocalDateTime.now())
                                                      .modifiedTime(LocalDateTime.now())
                                                      .title("챌린지 제목")
