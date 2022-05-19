@@ -6,13 +6,14 @@ import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
 import capstone.server.domain.challenge.JoinStatus;
 import capstone.server.domain.challenge.RoleType;
-import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
+import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
 import capstone.server.repository.challenge.ChallengeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -158,24 +159,25 @@ class ChallengeControllerTest {
 
         //given
 
-        Challenge challenge = createChallenge(1, BucketPrivacyStatus.PUBLIC, "챌린지 제목", "챌린지 내용");
+        Challenge challenge = createChallenge(5, BucketPrivacyStatus.PUBLIC, "챌린지 제목", "챌린지 내용");
         User save = userRepository.save(User.builder()
                                             .email("email")
                                             .nickName("참가자")
                                             .build());
-        ChallengeParticipation participation = challengeParticipationRepository.save(ChallengeParticipation.builder()
+
+        ChallengeParticipation save1 = challengeParticipationRepository.save(ChallengeParticipation.builder()
                                                                                                    .joinStatus(JoinStatus.WAIT)
                                                                                                    .roleType(RoleType.MEMBER)
                                                                                                    .user(save)
                                                                                                    .challenge(challenge)
                                                                                                    .build());
-        Long id = participation.getId();
+        System.out.println("save1 = " + save1.getId());
         //when
         //then
         ChallengeJoinStatusUpdateDto build = ChallengeJoinStatusUpdateDto.builder()
                                                                          .updateTime(LocalDateTime.now())
                                                                          .challengeParticipationId(1L)
-                                                                         .userId(1L)
+                                                                         .userId(2L)
                                                                          .JoinStatus(JoinStatus.SUCCEEDED)
                                                                          .build();
         mvc.perform(post("/api/challenge/join-status").contentType(MediaType.APPLICATION_JSON)
@@ -191,9 +193,7 @@ class ChallengeControllerTest {
             System.out.println("challengeParticipation.getJoinStatus() = " + challengeParticipation.getJoinStatus());
             
         }
-//        Long id = challengeParticipation.getId();
-//        System.out.println("id = " + id);
-//        Assertions.assertEquals(challengeParticipation.getJoinStatus(), JoinStatus.SUCCEEDED);
+        Assertions.assertEquals(save1.getJoinStatus(), JoinStatus.SUCCEEDED);
 
 
     }

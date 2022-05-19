@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 
@@ -16,11 +15,10 @@ import java.time.LocalDateTime;
 @Builder
 public class ChallengeJoinStatusUpdateDto {
 
-    @NotNull
+
     private Long userId;
-    @NotNull
     private Long challengeParticipationId;
-    @NotNull
+    @JsonSerialize(using = ToStringSerializer.class)
     private JoinStatus JoinStatus;
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime updateTime;

@@ -115,9 +115,6 @@ public class ChallengeService {
     public void updateJoinStatus(ChallengeJoinStatusUpdateDto updateDto) {
         ChallengeParticipation participation = challengeParticipationRepository.findById(updateDto.getChallengeParticipationId())
                                                                                .orElseThrow(() -> new IllegalArgumentException("테이블에 참가정보가 존재하지 않습니다"));
-        System.out.println("participation.getJoinStatus() = " + participation.getJoinStatus());
-        JoinStatus joinStatus = updateDto.getJoinStatus();
-        System.out.println("joinStatus = " + joinStatus);
         participation.changeJoinStatus(updateDto.getJoinStatus());
 
 
