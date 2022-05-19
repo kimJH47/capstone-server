@@ -3,7 +3,10 @@ package capstone.server.service;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.challenge.Challenge;
+import capstone.server.domain.challenge.ChallengeParticipation;
+import capstone.server.domain.challenge.JoinStatus;
 import capstone.server.domain.challenge.RoleType;
+import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeParticipationResponseDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
@@ -81,6 +84,7 @@ class ChallengeServiceTest {
     @DisplayName("챌린지에 참가(또는 대기) 유저들을 조회하는 테스트")
     public void 챌린지참가_유저_조회테스트() throws Exception{
         //given
+
         createChallenge();
         List<User> all = userRepository.findAll();
 
@@ -114,31 +118,54 @@ class ChallengeServiceTest {
     @DisplayName("챌린지에 자리가 없으면 예외가 발생하는 테스트")
     public void challengeFullUsers_test() throws Exception {
         //given
+        createUser("test");
         createChallenge();
-        List<User> all = userRepository.findAll();
+        Challenge challenge = challengeRepository.findById(1L)
+                                                 .get();
 
 
-        //테스트 챌린지 최대인원 4명 / 유저 5명 참가
-        List<ChallengeJoinRequestDto> dtos = Stream.of(1, 2, 3, 4, 5)
-                                                   .map(value -> ChallengeJoinRequestDto.builder()
-                                                                                        .userId(Long.valueOf(value))
-                                                                                        .requestTime(LocalDateTime.now())
-                                                                                        .challengeId(1L)
-                                                                                        .build())
-                                                   .collect(Collectors.toList());
-
+        for (int i = 0 ; i<4;i++){
+            User save = userRepository.save(new User());
+            challengeParticipationRepository.save(ChallengeParticipation.builder()
+                                                                        .user(save)
+                                                                        .roleType(RoleType.MEMBER)
+                                                                        .joinStatus(JoinStatus.SUCCEEDED)
+                                                                        .challenge(challenge)
+                                                                        .joinTime(LocalDateTime.now())
+                                                                        .build());
+        }
+        //테스트 챌린지 최대인원 5명 / 유저 1명 추가참가
         //when
         //then
         Assertions.assertThrows(CustomException.class, () -> {
-            dtos.stream()
-                .forEach(challengeJoinRequestDto -> challengeService.join(challengeJoinRequestDto));
-
+            challengeService.join(ChallengeJoinRequestDto.builder()
+                                                         .challengeId(1L)
+                                                         .userId(1L)
+                                                         .build());
         });
 
 
 
     }
-
+    @Test
+    @DisplayName("참가요청된 유저의 joinStatus 가 wait 에서 succeeded 로 변경되어야함")
+    public void 챌린지참가_상태변경_테스트() throws Exception{
+        //given
+        createUser("test");
+        createUser("참가자");
+        createChallenge();
+        challengeService.join(ChallengeJoinRequestDto.builder()
+                                                     .userId(2L)
+                                                     .challengeId(1L)
+                                                     .build());
+        //when
+        challengeService.updateJoinStatus(new ChallengeJoinStatusUpdateDto(2L, 2L, JoinStatus.SUCCEEDED, LocalDateTime.now()));
+        //then
+        ChallengeParticipation challenge = challengeParticipationRepository.findById(2L)
+                                                 .get();
+        //Assertions.assertEquals(challenge.getJoinStatus(), JoinStatus.WAIT);
+        Assertions.assertEquals(challenge.getJoinStatus(), JoinStatus.SUCCEEDED);
+    }
     private void createChallenge() {
          challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 1")
@@ -149,5 +176,11 @@ class ChallengeServiceTest {
                                                      .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                      .userId(1L)
                                                      .build());
+    }
+    private void createUser(String test) {
+        userRepository.save(User.builder()
+                                .nickName(test)
+                                .email("mail")
+                                .build());
     }
 }

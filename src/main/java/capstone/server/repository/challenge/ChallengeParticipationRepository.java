@@ -3,7 +3,6 @@ package capstone.server.repository.challenge;
 import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
 import capstone.server.domain.challenge.JoinStatus;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,14 +22,14 @@ public interface ChallengeParticipationRepository extends JpaRepository<Challeng
             "and chp.joinStatus=:joinStatus")
     List<ChallengeParticipation> findWithPagingByChallengeAndJoinStatus(@Param("challenge") Challenge challenge,
                                                                         @Param("joinStatus") JoinStatus joinStatus, Pageable pageable);
+//    default boolean isFullChallengeUsers(Challenge challenge) {
+//        int maxUsers = challenge.getMaxJoinNum();
+//        return findWithPagingByChallengeAndJoinStatus(challenge, JoinStatus.SUCCEEDED,
+//                PageRequest.of(0, maxUsers)).size() == maxUsers;
+//    }
+
     @Query("select chp from ChallengeParticipation chp join fetch chp.challenge where chp.challenge=:challenge")
     List<ChallengeParticipation> findAllByChallenge(@Param("challenge") Challenge challenge);
-    default boolean isFullChallengeUsers(Challenge challenge) {
-        int maxUsers = challenge.getMaxJoinNum();
-        return findWithPagingByChallengeAndJoinStatus(challenge, JoinStatus.SUCCEEDED,
-                PageRequest.of(0, maxUsers)).size() == maxUsers;
-    }
-
 
 
 

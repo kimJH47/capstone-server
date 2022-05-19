@@ -6,6 +6,7 @@ import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
 import capstone.server.domain.challenge.JoinStatus;
 import capstone.server.domain.challenge.RoleType;
+import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
 import capstone.server.repository.UserRepository;
@@ -134,6 +135,7 @@ class ChallengeControllerTest {
     @DisplayName("챌린지 참가인원이 꽉찾을때 예외 테스트")
     public void challengeFullUsers_test() throws Exception{
         //given
+
         createChallenge(1, BucketPrivacyStatus.PUBLIC, "챌린지 제목", "챌린지 내용");
         ChallengeJoinRequestDto requestDto = ChallengeJoinRequestDto.builder()
                                                                     .challengeId(1L)
@@ -148,7 +150,54 @@ class ChallengeControllerTest {
            .andDo(print());
         //조회 Api 만들고 다시 테스트
     }
-    private void createChallenge(int maxJoinNum, BucketPrivacyStatus privacyStatus, String title, String content) {
+
+
+    @Test
+    @DisplayName("챌린지 참가정보 변경 api 사용시 변경되어야함")
+    public void 챌린지참가정보변경_테스트() throws Exception {
+
+        //given
+
+        Challenge challenge = createChallenge(1, BucketPrivacyStatus.PUBLIC, "챌린지 제목", "챌린지 내용");
+        User save = userRepository.save(User.builder()
+                                            .email("email")
+                                            .nickName("참가자")
+                                            .build());
+        ChallengeParticipation participation = challengeParticipationRepository.save(ChallengeParticipation.builder()
+                                                                                                   .joinStatus(JoinStatus.WAIT)
+                                                                                                   .roleType(RoleType.MEMBER)
+                                                                                                   .user(save)
+                                                                                                   .challenge(challenge)
+                                                                                                   .build());
+        Long id = participation.getId();
+        //when
+        //then
+        ChallengeJoinStatusUpdateDto build = ChallengeJoinStatusUpdateDto.builder()
+                                                                         .updateTime(LocalDateTime.now())
+                                                                         .challengeParticipationId(1L)
+                                                                         .userId(1L)
+                                                                         .JoinStatus(JoinStatus.SUCCEEDED)
+                                                                         .build();
+        mvc.perform(post("/api/challenge/join-status").contentType(MediaType.APPLICATION_JSON)
+                                                      .content(objectMapper.writeValueAsString(build)))
+           .andExpect(status().isOk())
+           .andDo(print());
+
+
+        System.out.println(" ==========");
+        List<ChallengeParticipation> all = challengeParticipationRepository.findAll();
+        for (ChallengeParticipation challengeParticipation : all) {
+            System.out.println("challengeParticipation.getId() = " + challengeParticipation.getId());
+            System.out.println("challengeParticipation.getJoinStatus() = " + challengeParticipation.getJoinStatus());
+            
+        }
+//        Long id = challengeParticipation.getId();
+//        System.out.println("id = " + id);
+//        Assertions.assertEquals(challengeParticipation.getJoinStatus(), JoinStatus.SUCCEEDED);
+
+
+    }
+    private Challenge createChallenge(int maxJoinNum, BucketPrivacyStatus privacyStatus, String title, String content) {
         User user = userRepository.findById(1L)
                                   .get();
         Challenge challenge = Challenge.builder()
@@ -159,7 +208,7 @@ class ChallengeControllerTest {
                                    .uploadTime(LocalDateTime.now())
                                    .build();
         challenge.changeUser(user);
-        challengeRepository.save(challenge);
+        return challengeRepository.save(challenge);
     }
 
 
