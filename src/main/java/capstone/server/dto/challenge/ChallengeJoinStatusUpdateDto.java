@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Builder
 public class ChallengeJoinStatusUpdateDto {
 
-
     private Long userId;
     private Long challengeParticipationId;
     @JsonSerialize(using = ToStringSerializer.class)

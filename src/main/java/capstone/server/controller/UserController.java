@@ -16,13 +16,9 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<?> findByUsers() {
-
         return ResponseEntity.ok()
                              .body(userService.findByUsers());
     }
-
-
-
 
 
 }

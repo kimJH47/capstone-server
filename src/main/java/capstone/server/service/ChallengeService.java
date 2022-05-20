@@ -65,11 +65,15 @@ public class ChallengeService {
 
         Challenge findChallenge = challengeRepository.findById(requestDto.getChallengeId())
                                                      .orElseThrow((() -> new IllegalArgumentException("테이블에 챌린지가 존재하지 않습니다")));
+
+        //챌린지에 참가자리가 없거나 비공개 일 때 예외 던지기(ControllerAdvice)
         if (findChallenge.getChallengePrivacyStatus()
-                         .equals(BucketPrivacyStatus.PRIVATE) || isFullChallengeUsers(findChallenge)) {
-            //챌린지에 참가자리가 없거나 비공개 일 때 예외 던지기(ControllerAdvice)
+                         .equals(BucketPrivacyStatus.PRIVATE)) {
+            throw new CustomException(ErrorCode.CHALLENGE_NOT_PUBLIC);
+        } else if (isFullChallengeUsers(findChallenge)) {
             throw new CustomException(ErrorCode.CHALLENGE_FULL_USERS);
         }
+
         User findUser = userRepository.findById(requestDto.getUserId())
                                                 .orElseThrow((() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다")));
 

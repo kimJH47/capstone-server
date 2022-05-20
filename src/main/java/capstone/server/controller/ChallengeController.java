@@ -44,7 +44,6 @@ public class ChallengeController {
             String defaultMessage = bindingResult.getAllErrors()
                                                  .get(0)
                                                  .getDefaultMessage();
-
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
         challengeService.join(requestDto);
