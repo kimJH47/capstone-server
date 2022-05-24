@@ -55,7 +55,7 @@ class ChallengeControllerTest {
     @BeforeEach
     public void 테스트유저_생성() {
         User save = userRepository.save(User.builder()
-                                            .nickName("Test")
+                                            .name("Test")
                                             .email("emailTest")
                                             .build());
     }
@@ -162,7 +162,7 @@ class ChallengeControllerTest {
         Challenge challenge = createChallenge(5, BucketPrivacyStatus.PUBLIC, "챌린지 제목", "챌린지 내용");
         User save = userRepository.save(User.builder()
                                             .email("email")
-                                            .nickName("참가자")
+                                            .name("참가자")
                                             .build());
 
         ChallengeParticipation save1 = challengeParticipationRepository.save(ChallengeParticipation.builder()

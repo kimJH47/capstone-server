@@ -64,7 +64,7 @@ class ChallengeParticipationRepositoryTest {
 
     private void createUser() {
         userRepository.save(User.builder()
-                                .nickName("test")
+                                .name("test")
                                 .email("mail")
                                 .build());
     }

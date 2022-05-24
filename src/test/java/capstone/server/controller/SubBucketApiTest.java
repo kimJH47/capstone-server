@@ -45,7 +45,7 @@ public class SubBucketApiTest {
     @BeforeEach
     public void 테스트유저_버킷_생성() {
         User save = userRepository.save(User.builder()
-                                            .nickName("Test")
+                                            .name("Test")
                                             .email("emailTest")
                                             .build());
         Bucket bucket = Bucket.builder()

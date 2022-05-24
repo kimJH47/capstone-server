@@ -28,7 +28,7 @@ public class UserService {
         //파라미터를 dto 쓸지 유저를 쓸지 고민
         User user = User.builder()
                         .email(requestDto.getEmail())
-                        .nickName(requestDto.getNickName())
+                        .name(requestDto.getNickName())
                         .userRole(UserRole.GUEST)
                         .build();
 

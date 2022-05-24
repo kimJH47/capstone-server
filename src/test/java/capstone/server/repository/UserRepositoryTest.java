@@ -19,7 +19,7 @@ class UserRepositoryTest {
 
         //given
         User save = userRepository.save(User.builder()
-                                            .nickName("Test")
+                                            .name("Test")
                                             .email("emailTest")
                                             .build());
         //when

@@ -46,7 +46,7 @@ class BucketApiTest {
     @BeforeEach
     public void 테스트유저생성() {
         User save = userRepository.save(User.builder()
-                                            .nickName("Test")
+                                            .name("Test")
                                             .email("emailTest")
                                             .build());
     }
