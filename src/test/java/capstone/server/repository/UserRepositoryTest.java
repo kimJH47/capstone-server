@@ -28,7 +28,7 @@ class UserRepositoryTest {
 
         User byId = userRepository.getById(id);
 
-        System.out.println("byId = " + byId.getNickName());
+        System.out.println("byId = " + byId.getName());
         Assertions.assertThat(userRepository.getById(id))
                   .isSameAs(save);
 

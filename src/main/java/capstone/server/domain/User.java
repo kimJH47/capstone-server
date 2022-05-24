@@ -48,7 +48,7 @@ public class User {
     private UserRole userRole;
 
     @Column
-    private String nickName;
+    private String name;
 
 
     public void changeProfile(Profile profile) {

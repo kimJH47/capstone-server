@@ -36,7 +36,7 @@ class UserServiceTest {
         User findUser = userRepository.findById(saveId)
                                    .orElse(new User());
         //then
-        assertThat(findUser.getNickName()).isEqualTo("myName");
+        assertThat(findUser.getName()).isEqualTo("myName");
         assertThat(findUser.getUserRole()).isEqualTo(UserRole.GUEST);
         assertThat(findUser.getEmail()).isEqualTo("kmr2644@gmail.com");
     }

@@ -35,7 +35,7 @@ public class ChallengeParticipationResponseDto {
                                                  .getId();
 
         this.userName = challengeParticipation.getUser()
-                                              .getNickName();
+                                              .getName();
 
         this.roleType = challengeParticipation.getRoleType();
         this.joinStatus = challengeParticipation.getJoinStatus();

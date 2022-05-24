@@ -17,8 +17,8 @@ public class Profile {
     @Id
     @Column(name = "profile_id")
     private Long id;
-    @Column
     private Integer age;
+    private String nickName;
 
     @OneToOne
     @JoinColumn(name = "profile_image_id")

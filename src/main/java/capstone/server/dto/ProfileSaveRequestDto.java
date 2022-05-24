@@ -11,6 +11,7 @@ import lombok.Getter;
 public class ProfileSaveRequestDto {
 
     private int age;
+    private String NickName;
     private String profileImage;
 
 }
