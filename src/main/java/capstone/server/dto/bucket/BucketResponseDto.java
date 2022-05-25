@@ -1,5 +1,6 @@
 package capstone.server.dto.bucket;
 
+import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -28,4 +29,26 @@ public class BucketResponseDto {
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime modifiedTime;
 
+
+    public static BucketResponseDto create(Bucket bucket) {
+        return BucketResponseDto.builder()
+                                .content(bucket.getContent())
+                                .bucketPrivacyStatus(bucket.getBucketPrivacyStatus())
+                                .bucketStatus(bucket.getBucketStatus())
+                                .modifiedTime(bucket.getModifiedTime())
+                                .uploadTime(bucket.getUploadTime())
+                                .build();
+
+    }
+
+    @Override
+    public String toString() {
+        return "BucketResponseDto{" +
+                "content='" + content + '\'' +
+                ", bucketStatus=" + bucketStatus +
+                ", bucketPrivacyStatus=" + bucketPrivacyStatus +
+                ", uploadTime=" + uploadTime +
+                ", modifiedTime=" + modifiedTime +
+                '}';
+    }
 }

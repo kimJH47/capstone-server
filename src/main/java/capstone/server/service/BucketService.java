@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class BucketService {
@@ -34,12 +37,23 @@ public class BucketService {
         Bucket findBucket = bucketRepository.findById(id)
                                             .orElseThrow(() -> new IllegalArgumentException("테이블에 버킷이 없습니다"));
         return BucketResponseDto.builder()
-                         .content(findBucket.getContent())
-                         .bucketStatus(findBucket.getBucketStatus())
-                         .bucketPrivacyStatus(findBucket.getBucketPrivacyStatus())
-                         .modifiedTime(findBucket.getModifiedTime())
-                         .uploadTime(findBucket.getUploadTime())
-                         .build();
+                                .content(findBucket.getContent())
+                                .bucketStatus(findBucket.getBucketStatus())
+                                .bucketPrivacyStatus(findBucket.getBucketPrivacyStatus())
+                                .modifiedTime(findBucket.getModifiedTime())
+                                .uploadTime(findBucket.getUploadTime())
+                                .build();
 
     }
+
+    @Transactional(readOnly = true)
+    public List<BucketResponseDto> findBucketsByUserId(Long userId) {
+        User findUser = userRepository.findById(userId)
+                                           .orElseThrow(() -> new IllegalArgumentException("테이블에 유저가 없습니다"));
+        List<Bucket> buckets = bucketRepository.findAllByUser(findUser);
+        return buckets.stream()
+                      .map(bucket -> BucketResponseDto.create(bucket))
+                      .collect(Collectors.toList());
+    }
+
 }
