@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 
 @SpringBootTest
-@Transactionalad
+@Transactional
 class BucketServiceTest {
 
     @Autowired

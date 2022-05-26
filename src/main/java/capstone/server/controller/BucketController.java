@@ -32,7 +32,7 @@ public class BucketController {
         }
         bucketService.saveBucket(requestDto);
         ResponseEntity<String> responseEntity = ResponseEntity.ok()
-                                                          .body("버킷리스트 등록완료");
+                                                              .body("버킷리스트 등록완료");
 
         return responseEntity;
 
@@ -49,4 +49,10 @@ public class BucketController {
 
     }
 
+    @GetMapping("/buckets/user/{id}")
+    public ResponseEntity<?> findBucketsByUserId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok()
+                             .body(bucketService.findBucketsByUserId(id));
+
+    }
 }
