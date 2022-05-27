@@ -5,6 +5,7 @@ import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.dto.bucket.BucketResponseDto;
 import capstone.server.dto.bucket.BucketSaveRequestDto;
+import capstone.server.dto.bucket.BucketUpdateDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,11 @@ public class BucketService {
         return buckets.stream()
                       .map(bucket -> BucketResponseDto.create(bucket))
                       .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateBucketStatus(BucketUpdateDto bucketUpdateDto) {
+
     }
 
 }
