@@ -3,16 +3,24 @@ package capstone.server.dto.bucket;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-public class BucketUpdateDto {
+@AllArgsConstructor
+@Getter
+@Builder
+public class BucketContentUpdateDto {
 
-    private Long id;
+    private Long BucketId;
+    @NotNull
     private String content;
-    @JsonSerialize(using = ToStringSerializer.class)
-    private capstone.server.domain.challenge.JoinStatus JoinStatus;
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime updateTime;
 
+    public BucketContentUpdateDto() {
+    }
 }

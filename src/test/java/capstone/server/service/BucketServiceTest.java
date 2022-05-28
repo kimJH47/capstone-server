@@ -4,6 +4,7 @@ import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
+import capstone.server.dto.bucket.BucketContentUpdateDto;
 import capstone.server.dto.bucket.BucketResponseDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
@@ -88,4 +89,33 @@ class BucketServiceTest {
 
     }
 
+
+    @Test
+    public void 컨탠츠업데이트_테스트() throws Exception{
+        //given
+        User user = userRepository.findById(1L)
+                                  .get();
+
+        Bucket bucket1 = Bucket.builder()
+                               .content("버킷")
+                               .bucketStatus(BucketStatus.ONGOING)
+                               .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                               .user(user)
+                               .uploadTime(LocalDateTime.now())
+                               .modifiedTime(LocalDateTime.now())
+                               .build();
+        bucketRepository.save(bucket1);
+        //when
+        bucketService.updateBucketContent(BucketContentUpdateDto.builder()
+                                                                .content("수정")
+                                                                .updateTime(LocalDateTime.now())
+                                                                .build(), 1L);
+        //then
+        bucketRepository.findById(1L)
+                        .map(Bucket::getContent)
+                        .stream()
+                        .allMatch(s -> s.equals("수정"));
+        Bucket bucket = bucketRepository.findById(1L)
+                                        .get();
+    }
 }

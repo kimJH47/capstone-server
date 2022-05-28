@@ -37,4 +37,11 @@ public class Bucket {
         this.user = user;
     }
 
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
 }

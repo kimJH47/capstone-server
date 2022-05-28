@@ -5,7 +5,7 @@ import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.dto.bucket.BucketResponseDto;
 import capstone.server.dto.bucket.BucketSaveRequestDto;
-import capstone.server.dto.bucket.BucketUpdateDto;
+import capstone.server.dto.bucket.BucketContentUpdateDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +58,11 @@ public class BucketService {
     }
 
     @Transactional
-    public void updateBucketStatus(BucketUpdateDto bucketUpdateDto) {
+    public void updateBucketContent(BucketContentUpdateDto bucketUpdateDto,Long bucketId) {
+        Bucket bucket = bucketRepository.findById(bucketId)
+                                        .orElseThrow(() -> new IllegalArgumentException("테이블에 버킷이 없습니다"));
+        bucket.changeContent(bucketUpdateDto.getContent());
+        bucket.setModifiedTime(bucketUpdateDto.getUpdateTime());
 
     }
 

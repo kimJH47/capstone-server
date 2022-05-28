@@ -1,6 +1,7 @@
 package capstone.server.controller;
 
 
+import capstone.server.dto.bucket.BucketContentUpdateDto;
 import capstone.server.dto.bucket.BucketResponseDto;
 import capstone.server.dto.bucket.BucketSaveRequestDto;
 import capstone.server.service.BucketService;
@@ -27,7 +28,6 @@ public class BucketController {
             String defaultMessage = bindingResult.getAllErrors()
                                                  .get(0)
                                                  .getDefaultMessage();
-            System.out.println("BED REQUEST");
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
         bucketService.saveBucket(requestDto);
@@ -54,5 +54,18 @@ public class BucketController {
         return ResponseEntity.ok()
                              .body(bucketService.findBucketsByUserId(id));
 
+    }
+
+    @PutMapping("/buckets/{id}/contents")
+    public ResponseEntity<?> updateBucketContents(@PathVariable("id") Long id, @Valid @RequestBody BucketContentUpdateDto updateDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String defaultMessage = bindingResult.getAllErrors()
+                                                 .get(0)
+                                                 .getDefaultMessage();
+            return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
+        }
+        bucketService.updateBucketContent(updateDto,id);
+        return ResponseEntity.ok()
+                             .body("버킷 내용이 업데이트 되었습니다");
     }
 }

@@ -4,6 +4,7 @@ import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
+import capstone.server.dto.bucket.BucketContentUpdateDto;
 import capstone.server.dto.bucket.BucketSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
@@ -23,8 +24,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -108,6 +108,40 @@ class BucketApiTest {
         mockMvc.perform(get("/api/buckets/user/1"))
                .andExpect(status().isOk())
                 .andDo(print());
+    }
+
+    @Test
+    public void bucket_content_update_test() throws Exception{
+        //given
+        User user = userRepository.findById(1L)
+                                  .get();
+
+        for (int i = 0; i < 10; i++) {
+            Bucket bucket1 = Bucket.builder()
+                                   .content("버킷"+i)
+                                   .bucketStatus(BucketStatus.ONGOING)
+                                   .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                   .user(user)
+                                   .uploadTime(LocalDateTime.now())
+                                   .modifiedTime(LocalDateTime.now())
+                                   .build();
+            bucketRepository.save(bucket1);
+        }
+        //when
+        //then
+        BucketContentUpdateDto build = BucketContentUpdateDto.builder()
+                                                             .content("수정된버킷")
+                                                             .updateTime(LocalDateTime.now())
+                                                             .build();
+        mockMvc.perform(put("/api/buckets/1/contents").contentType(MediaType.APPLICATION_JSON)
+                                                      .content(objectMapper.writeValueAsString(build)))
+               .andExpect(status().isOk())
+               .andDo(print());
+        String content = bucketRepository.findById(1L)
+                                         .get()
+                                         .getContent();
+        Assertions.assertEquals(content, "수정된버킷");
+
     }
 
 
