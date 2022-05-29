@@ -6,6 +6,7 @@ import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
 import capstone.server.dto.bucket.BucketContentUpdateDto;
 import capstone.server.dto.bucket.BucketResponseDto;
+import capstone.server.dto.bucket.BucketStatusUpdateDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
 import org.assertj.core.api.Assertions;
@@ -115,7 +116,33 @@ class BucketServiceTest {
                         .map(Bucket::getContent)
                         .stream()
                         .allMatch(s -> s.equals("수정"));
-        Bucket bucket = bucketRepository.findById(1L)
-                                        .get();
+    }
+
+    @Test
+    public void 버킷상태_업데이트() throws Exception{
+        //given
+        User user = userRepository.findById(1L)
+                                  .get();
+
+        Bucket bucket1 = Bucket.builder()
+                               .content("버킷")
+                               .bucketStatus(BucketStatus.ONGOING)
+                               .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                               .user(user)
+                               .uploadTime(LocalDateTime.now())
+                               .modifiedTime(LocalDateTime.now())
+                               .build();
+        bucketRepository.save(bucket1);
+        //when
+        bucketService.updateBucketStatus(BucketStatusUpdateDto.builder()
+                                                               .status(BucketStatus.COMPLETED)
+                                                               .updateTime(LocalDateTime.now())
+                                                               .build(), 1L);
+        //then
+        bucketRepository.findById(1L)
+                        .map(Bucket::getBucketStatus)
+                        .stream()
+                        .allMatch(bucketStatus -> bucketStatus.equals(BucketStatus.COMPLETED));
+
     }
 }
