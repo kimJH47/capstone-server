@@ -1,6 +1,7 @@
 package capstone.server.domain.bucket;
 
 import capstone.server.domain.User;
+import capstone.server.dto.bucket.BucketUpdateDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,15 +34,28 @@ public class Bucket {
 
 
     //단방향 , setter 사용x
+
+    //setter
     public void changeUser(User user) {
         this.user = user;
+
     }
 
+    public void changeStatus(BucketStatus bucketStatus) {
+        this.bucketStatus = bucketStatus;
+    }
     public void changeContent(String content) {
         this.content = content;
     }
 
     public void setModifiedTime(LocalDateTime modifiedTime) {
         this.modifiedTime = modifiedTime;
+    }
+
+    public void update(BucketUpdateDto updateDto) {
+        this.content = updateDto.getContent();
+        this.modifiedTime = updateDto.getModifiedTime();
+        this.bucketStatus = updateDto.getBucketStatus();
+        this.bucketPrivacyStatus = updateDto.getBucketPrivacyStatus();
     }
 }
