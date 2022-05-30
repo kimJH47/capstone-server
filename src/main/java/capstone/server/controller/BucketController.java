@@ -22,7 +22,7 @@ import javax.validation.Valid;
 public class BucketController {
 
     private final BucketService bucketService;
-
+    //서버주소/api/buckets
     @PostMapping("/buckets")
     public ResponseEntity<?> save(@RequestBody @Valid BucketSaveRequestDto requestDto, BindingResult bindingResult) {
 

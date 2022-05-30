@@ -2,6 +2,8 @@ package capstone.server.dto.bucket;
 
 
 import capstone.server.domain.bucket.SubBucketStatus;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,16 +12,16 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
-@Builder
 @Getter
-public class SubBucketResponseDto {
+@Builder
+public class SubBucketUpdateDto {
 
-
+    @NotNull
+    private Long SubBucketId;
+    private SubBucketStatus subBucketStatus;
+    @NotNull
     private String content;
     @NotNull
-    private SubBucketStatus subBucketStatus;
-    private LocalDateTime uploadTime;
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime modifiedTime;
-
-
 }

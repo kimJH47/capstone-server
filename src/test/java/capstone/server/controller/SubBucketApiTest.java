@@ -104,7 +104,6 @@ public class SubBucketApiTest {
         mockMvc.perform(get("/api/sub-bucket/1").accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andDo(print());
-               //.andExpect(jsonPath());
 
 
     }

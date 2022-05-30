@@ -84,9 +84,6 @@ public class ChallengeController {
                                                  .getDefaultMessage();
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
-        System.out.println("updateDto = " + updateDto.getUserId());
-        System.out.println("updateDto = " + updateDto.getChallengeParticipationId());
-
         challengeService.updateJoinStatus(updateDto);
         return ResponseEntity.ok()
                              .body("참가정보가 업데이트 되었습니다");

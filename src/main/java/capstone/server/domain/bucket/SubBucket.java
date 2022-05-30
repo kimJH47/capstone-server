@@ -1,6 +1,7 @@
 package capstone.server.domain.bucket;
 
 
+import capstone.server.dto.bucket.SubBucketUpdateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,4 +38,9 @@ public class SubBucket {
         this.bucket = bucket;
     }
 
+    public void update(SubBucketUpdateDto updateSubBucketDto) {
+        this.subBucketStatus = updateSubBucketDto.getSubBucketStatus();
+        this.content = updateSubBucketDto.getContent();
+        this.modifiedTime = updateSubBucketDto.getModifiedTime();
+    }
 }

@@ -141,7 +141,6 @@ class BucketApiTest {
                                          .get()
                                          .getContent();
         Assertions.assertEquals(content, "수정된버킷");
-
     }
 
 

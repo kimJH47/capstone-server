@@ -5,6 +5,7 @@ import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.SubBucket;
 import capstone.server.dto.bucket.SubBucketResponseDto;
 import capstone.server.dto.bucket.SubBucketSaveRequestDto;
+import capstone.server.dto.bucket.SubBucketUpdateDto;
 import capstone.server.repository.bucket.BucketRepository;
 import capstone.server.repository.bucket.SubBucketRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class SubBucketService {
         subBucket.changeBucket(findBucket);
         subBucketRepository.save(subBucket);
     }
-
+    //정적 dto 생성메서드 만들까?
     @Transactional(readOnly = true)
     public List<SubBucketResponseDto> findByBucketId(Long id) {
         List<SubBucketResponseDto> responseDtos = subBucketRepository.findByBucketId(id)
@@ -43,7 +44,18 @@ public class SubBucketService {
                                                                                                       .build())
                                                                 .collect(Collectors.toList());
 
+        if (responseDtos.isEmpty()) {
+            new IllegalArgumentException("테이블에 세부목표가 존재하지 않습니다");
+        }
         return responseDtos;
+
+    }
+
+    @Transactional
+    public void updateSubBucket(SubBucketUpdateDto updateSubBucketDto) {
+        SubBucket subBucket = subBucketRepository.findById(updateSubBucketDto.getSubBucketId())
+                                                 .orElseThrow(() -> new IllegalArgumentException("세부목표가 테이블에 존재하지 않습니다"));
+        subBucket.update(updateSubBucketDto);
 
     }
 

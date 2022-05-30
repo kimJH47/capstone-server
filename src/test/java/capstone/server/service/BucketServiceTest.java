@@ -145,4 +145,5 @@ class BucketServiceTest {
                         .allMatch(bucketStatus -> bucketStatus.equals(BucketStatus.COMPLETED));
 
     }
+
 }
