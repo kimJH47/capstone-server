@@ -4,6 +4,12 @@ spring:
     username: sa
     password: 1145
     driver-class-name: org.h2.Driver
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 200MB
 
   jpa:
     hibernate:
@@ -21,3 +27,7 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
 #    org.hibernate.type: trace
+
+file:
+  upload:
+    location: /Users/kim/upload
