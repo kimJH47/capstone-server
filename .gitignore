@@ -39,5 +39,4 @@ out/
 
 
 ### aws s3###
-.aws.yml
-!**/src/main/resources/aws.yml
+application-aws.yml
