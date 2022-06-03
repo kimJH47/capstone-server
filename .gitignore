@@ -40,3 +40,5 @@ out/
 
 ### aws s3###
 application-aws.yml
+*.jpeg
+*.png
