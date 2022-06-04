@@ -10,10 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ImageStorageService {
+public class    ImageStorageService {
 
     private final BucketImageRepository bucketImageRepository;
     private final ProfileImageRepository profileImageRepository;
@@ -39,7 +40,7 @@ public class ImageStorageService {
     }*/
 
     @Transactional
-    public String ImageUploadtoS3(MultipartFile multipartFile) throws IOException {
+    public String ImageUploadtoS3(List<MultipartFile> multipartFiles) throws IOException {
         String aStatic = s3Uploader.upload(multipartFile, "static");
         return aStatic;
 

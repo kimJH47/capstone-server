@@ -5,6 +5,7 @@ import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.dto.bucket.*;
 import capstone.server.repository.UserRepository;
+import capstone.server.repository.bucket.BucketImageRepository;
 import capstone.server.repository.bucket.BucketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class BucketService {
 
     private final BucketRepository bucketRepository;
     private final UserRepository userRepository;
+
+    private final BucketImageRepository bucketImageRepository;
 
 
     @Transactional

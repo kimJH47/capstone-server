@@ -12,8 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -31,7 +34,27 @@ public class S3Uploader {
 
         return upload(uploadFile, dirName);
     }
+    public String upload(List<MultipartFile> multipartFileList, String dirName) throws IOException {
 
+        List<File> files = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFileList) {
+            File file = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
+            files.add(file);
+        }
+
+        return upload(files, dirName);
+    }
+    private List<String> upload(List<File> uploadFiles, String dirName) {
+
+        uploadFiles.stream()
+                   .map(file -> {
+                       String fileName = dirName + "/" + UUID.randomUUID() + file.getName();
+                       return putS3(file, fileName);
+                   })
+                   .collect(Collectors.toList());
+        removeNewFile(uploadFile);
+        return uploadImageUrl;
+    }
     // S3로 파일 업로드하기
     private String upload(File uploadFile, String dirName) {
         String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
@@ -57,8 +80,9 @@ public class S3Uploader {
 
     // 로컬에 파일 업로드 하기
     private Optional<File> convert(MultipartFile file) throws IOException {
+        //S3 버킷 퍼블릭 ACL 차단 해제해야함
         File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
-        if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
+        if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능,중복생성 불가능)
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
                 fos.write(file.getBytes());
             }

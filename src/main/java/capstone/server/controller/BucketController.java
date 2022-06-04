@@ -1,19 +1,18 @@
 package capstone.server.controller;
 
 
-import capstone.server.dto.bucket.BucketStatusUpdateDto;
-import capstone.server.dto.bucket.BucketContentUpdateDto;
-import capstone.server.dto.bucket.BucketResponseDto;
-import capstone.server.dto.bucket.BucketSaveRequestDto;
-import capstone.server.dto.bucket.BucketUpdateDto;
+import capstone.server.dto.bucket.*;
 import capstone.server.service.BucketService;
+import capstone.server.service.ImageStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestController
@@ -22,6 +21,8 @@ import javax.validation.Valid;
 public class BucketController {
 
     private final BucketService bucketService;
+    private final ImageStorageService imageStorageService;
+
     //서버주소/api/buckets
     @PostMapping("/buckets")
     public ResponseEntity<?> save(@RequestBody @Valid BucketSaveRequestDto requestDto, BindingResult bindingResult) {
@@ -40,6 +41,10 @@ public class BucketController {
 
     }
 
+    @PostMapping("/buckets/images")
+    public ResponseEntity<?> save(@RequestParam("images") List<MultipartFile> multipartFileList) {
+        imageStorageService.ImageUploadtoS3()
+    }
     @GetMapping("/buckets/{id}")
     public ResponseEntity<?> findOne(@PathVariable Long id) {
 
