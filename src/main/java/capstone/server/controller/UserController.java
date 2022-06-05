@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/image")
-    public ResponseEntity<?> imageSave(@RequestParam("images") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> imageSave(@RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
 //        if (bindingResult.hasErrors()) {
 //            String defaultMessage = bindingResult.getAllErrors()
 //                                                 .get(0)
@@ -32,9 +33,9 @@ public class UserController {
 //            System.out.println("defaultMessage = " + defaultMessage);
 //            return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
 //        }
-        String s = imageStorageService.ImageUploadtoS3(multipartFile);
+        List<String> uploadUrls = imageStorageService.ImageUploadToS3(multipartFiles);
         return ResponseEntity.ok()
-                             .body(s);
+                             .body(uploadUrls);
     }
 
 }

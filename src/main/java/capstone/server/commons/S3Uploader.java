@@ -26,47 +26,40 @@ public class S3Uploader {
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
-    public String bucket;
+    public String S3Bucket;
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 
-        return upload(uploadFile, dirName);
-    }
-    public String upload(List<MultipartFile> multipartFileList, String dirName) throws IOException {
+    public List<String> uploadToS3(List<MultipartFile> multipartFileList, String dirName) throws IOException {
 
         List<File> files = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFileList) {
             File file = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
             files.add(file);
         }
-
         return upload(files, dirName);
     }
     private List<String> upload(List<File> uploadFiles, String dirName) {
 
-        uploadFiles.stream()
-                   .map(file -> {
-                       String fileName = dirName + "/" + UUID.randomUUID() + file.getName();
-                       return putS3(file, fileName);
-                   })
-                   .collect(Collectors.toList());
-        removeNewFile(uploadFile);
-        return uploadImageUrl;
+        return uploadFiles.stream()
+                          .map(file -> {
+                                              String fileName = dirName + "/" + UUID.randomUUID() + file.getName();
+                                              return putS3(file, fileName);
+                                          })
+                          .collect(Collectors.toList());
     }
-    // S3로 파일 업로드하기
-    private String upload(File uploadFile, String dirName) {
+ /*   // S3로 파일 업로드하기
+    private String uploadToS3(File uploadFile, String dirName) {
         String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
         String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
         removeNewFile(uploadFile);
         return uploadImageUrl;
-    }
+    }*/
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        amazonS3Client.putObject(new PutObjectRequest(S3Bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        removeNewFile(uploadFile);
+        return amazonS3Client.getUrl(S3Bucket, fileName).toString();
     }
 
     // 로컬에 저장된 이미지 지우기

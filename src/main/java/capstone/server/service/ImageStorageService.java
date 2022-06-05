@@ -40,9 +40,9 @@ public class    ImageStorageService {
     }*/
 
     @Transactional
-    public String ImageUploadtoS3(List<MultipartFile> multipartFiles) throws IOException {
-        String aStatic = s3Uploader.upload(multipartFile, "static");
-        return aStatic;
+    public List<String> ImageUploadToS3(List<MultipartFile> multipartFiles) throws IOException {
+        List<String> ImageUrls = s3Uploader.uploadToS3(multipartFiles, "static");
+        return ImageUrls;
 
     }
 

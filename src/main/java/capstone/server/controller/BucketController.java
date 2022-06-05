@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -42,8 +43,11 @@ public class BucketController {
     }
 
     @PostMapping("/buckets/images")
-    public ResponseEntity<?> save(@RequestParam("images") List<MultipartFile> multipartFileList) {
-        imageStorageService.ImageUploadtoS3()
+    public ResponseEntity<?> save(@RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
+        List<String> uploadUrls = imageStorageService.ImageUploadToS3(multipartFiles);
+        return ResponseEntity.ok()
+                             .body(uploadUrls);
+
     }
     @GetMapping("/buckets/{id}")
     public ResponseEntity<?> findOne(@PathVariable Long id) {
