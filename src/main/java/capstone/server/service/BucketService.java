@@ -25,13 +25,14 @@ public class BucketService {
 
 
     @Transactional
-    public void saveBucket(BucketSaveRequestDto requestDto) {
+    public Long saveBucket(BucketSaveRequestDto requestDto) {
 
         Bucket bucket = requestDto.toEntity();
         User findUser = userRepository.findById(requestDto.getUserId())
                                       .orElseThrow(() -> new IllegalArgumentException("테이블에 유저데이터가 없습니다"));
         bucket.changeUser(findUser);
-        bucketRepository.save(bucket);
+        return bucketRepository.save(bucket)
+                               .getId();
     }
 
     @Transactional(readOnly = true)

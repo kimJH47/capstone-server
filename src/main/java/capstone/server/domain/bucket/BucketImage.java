@@ -1,10 +1,16 @@
 package capstone.server.domain.bucket;
 
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class BucketImage {
 
     @Id
@@ -16,6 +22,9 @@ public class BucketImage {
 
     private String location;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bucket_id")
+    private Bucket bucket;
 
 
 }
