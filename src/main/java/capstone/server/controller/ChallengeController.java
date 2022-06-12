@@ -66,7 +66,7 @@ public class ChallengeController {
      * @return 조회된 참가정보 리스트
      * <p>
      * 추가할것 :
-     * -동적쿼리이용원 : 하는 참가상태를 바디로 받아서 api 하나로 처리하기.
+     * -동적쿼리이용 : 하는 참가상태를 바디로 받아서 api 하나로 처리하기.
      */
     @GetMapping("/challenge/{id}/users")
     public ResponseEntity<?> findChallengeUsersById(@PathVariable Long id) {

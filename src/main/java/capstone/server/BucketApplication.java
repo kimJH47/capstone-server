@@ -1,11 +1,9 @@
 package capstone.server;
 
-import capstone.server.config.FileUploadProperties;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-@EnableConfigurationProperties(FileUploadProperties.class)
+//@EnableConfigurationProperties(FileUploadProperties.class)
 @SpringBootApplication
 public class BucketApplication {
 

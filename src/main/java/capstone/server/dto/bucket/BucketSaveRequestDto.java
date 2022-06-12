@@ -40,9 +40,4 @@ public class BucketSaveRequestDto {
                      .modifiedTime(this.getModifiedTime())
                      .build();
     }
-
-
-
-
-
 }

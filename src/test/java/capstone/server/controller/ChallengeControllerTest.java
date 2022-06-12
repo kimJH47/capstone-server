@@ -73,7 +73,6 @@ class ChallengeControllerTest {
                                                                     .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                                     .userId(1L)
                                                                     .build();
-
         //when
         //then
         mvc.perform(post("/api/challenge").contentType(MediaType.APPLICATION_JSON)

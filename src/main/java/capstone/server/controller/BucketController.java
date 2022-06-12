@@ -47,7 +47,6 @@ public class BucketController {
     @PostMapping(value = "/buckets",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> save(@RequestPart(value = "request") @Valid BucketSaveRequestDto requestDto, @RequestPart(value = "images") List<MultipartFile> multipartFiles, BindingResult bindingResult) throws IOException {
 
-
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
                                                  .get(0)
@@ -56,10 +55,9 @@ public class BucketController {
         }
         Long saveBucketId = bucketService.saveBucket(requestDto);
         if(!multipartFiles.isEmpty()){
-            List<String> strings = imageStorageService.BucketImageUploadToS3(saveBucketId,multipartFiles);
-            return ResponseEntity.ok().body(strings);
+            List<String> urls = imageStorageService.BucketImageUploadToS3(saveBucketId,multipartFiles);
+            return ResponseEntity.ok().body(urls);
         }
-
         return ResponseEntity.ok().body("버킷생성완료");
 
     }
@@ -69,17 +67,15 @@ public class BucketController {
         List<String> uploadUrls = imageStorageService.BucketImageUploadToS3(id, multipartFiles);
         return ResponseEntity.ok()
                              .body(uploadUrls);
-
     }
+    //조회
     @GetMapping("/buckets/{id}")
     public ResponseEntity<?> findOne(@PathVariable Long id) {
 
         BucketResponseDto findBucket = bucketService.findById(id);
 
-
         return ResponseEntity.ok()
                              .body(findBucket);
-
     }
 
     @GetMapping("/buckets/user/{id}")

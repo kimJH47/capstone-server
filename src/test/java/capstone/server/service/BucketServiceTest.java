@@ -49,7 +49,6 @@ class BucketServiceTest {
 
     @Test
     @DisplayName("버킷등록이 완료되어야함")
-
     public void 버킷등록() throws Exception {
         //given
         //when
