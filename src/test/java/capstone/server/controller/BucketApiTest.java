@@ -1,5 +1,6 @@
 package capstone.server.controller;
 
+import capstone.server.config.S3MockConfig;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,9 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @Transactional
-@SpringBootTest(properties = "spring.config.location=" +
-        "classpath:/application-test.yml")
+@SpringBootTest(properties = "classpath:application-test.yml")
 @AutoConfigureMockMvc
+@Import(S3MockConfig.class)
 class BucketApiTest {
 
 
@@ -44,7 +46,6 @@ class BucketApiTest {
     private UserRepository userRepository;
     @Autowired
     private BucketRepository bucketRepository;
-
 
     @BeforeEach
     public void 테스트유저생성() {

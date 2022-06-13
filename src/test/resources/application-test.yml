@@ -19,6 +19,8 @@ spring:
         generate_statistics: true
         #show_sql: true
         format_sql: true
+  profiles:
+    include: aws
 
 logging:
   level:
