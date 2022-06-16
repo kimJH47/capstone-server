@@ -1,5 +1,6 @@
 package capstone.server.config;
 
+import capstone.server.commons.S3Uploader;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
@@ -9,9 +10,13 @@ import io.findify.s3mock.S3Mock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Primary;
 
 @TestConfiguration
+@ComponentScan(basePackages = {"capstone.server"}, excludeFilters={
+        @ComponentScan.Filter(type= FilterType.ASSIGNABLE_TYPE, value= S3Uploader.class)})
 public class S3MockConfig {
 
     @Value("${cloud.aws.region.static}")

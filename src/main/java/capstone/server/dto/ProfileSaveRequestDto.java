@@ -14,4 +14,5 @@ public class ProfileSaveRequestDto {
     private String NickName;
     private String profileImage;
 
+
 }

@@ -1,5 +1,6 @@
 package capstone.server.controller;
 
+import capstone.server.config.AmazonS3Config;
 import capstone.server.config.S3MockConfig;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -35,6 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(properties = "classpath:application-test.yml")
 @AutoConfigureMockMvc
 @Import(S3MockConfig.class)
+@EnableAutoConfiguration(exclude = {
+        AmazonS3Config.class
+})
 class BucketApiTest {
 
 
