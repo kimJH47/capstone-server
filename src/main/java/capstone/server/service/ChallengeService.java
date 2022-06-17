@@ -10,6 +10,7 @@ import capstone.server.exception.ErrorCode;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
 import capstone.server.repository.challenge.ChallengeRepository;
+import capstone.server.repository.challenge.CustomChallengeRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
     private final ChallengeParticipationRepository challengeParticipationRepository;
-
+    private final CustomChallengeRepositoryImpl customChallengeRepository;
     @Transactional
     public void save(ChallengeSaveRequestDto requestDto) {
         User findUser = userRepository.findById(requestDto.getUserId())
@@ -114,7 +115,11 @@ public class ChallengeService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChallengeResponeDto> searchChallenge(ChallengeSearch challengeSearch) {
+    public List<ChallengeResponseDto> searchChallenges(ChallengeSearch challengeSearch) {
+        return customChallengeRepository.searchChallenge(challengeSearch)
+                                 .stream()
+                                 .map(challenge -> new ChallengeResponseDto(challenge))
+                                 .collect(Collectors.toList());
 
     }
 }

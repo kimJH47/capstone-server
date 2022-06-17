@@ -9,8 +9,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static capstone.server.domain.challenge.QChallenge.challenge;
 
@@ -24,15 +22,13 @@ public class CustomChallengeRepositoryImpl implements CustomChallengeRepository 
         꼭 컬랙션을 셔널로감싸서 옵 반환을 해야하나?
      */
     @Override
-    public List<Optional<Challenge>> searchChallenge(ChallengeSearch challengeSearch) {
+    public List<Challenge> searchChallenge(ChallengeSearch challengeSearch) {
         return jpaQueryFactory.selectFrom(challenge)
                               .where(challenge.challengePrivacyStatus.eq(BucketPrivacyStatus.PUBLIC), eqTitle(challengeSearch.getTitle()), eqStatus(challengeSearch.getChallengeStatus()))
                               .limit(100)
-                              .fetch()
-                              .stream()
-                              .map(challenge1 -> Optional.of(challenge1))
-                              .collect(Collectors.toList());
+                              .fetch();
     }
+
 
     public BooleanExpression eqTitle(String title) {
         return title != null ? challenge.title.eq(title) : null;
