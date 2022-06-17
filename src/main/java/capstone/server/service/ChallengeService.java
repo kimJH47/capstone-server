@@ -3,14 +3,8 @@ package capstone.server.service;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
-import capstone.server.domain.challenge.Challenge;
-import capstone.server.domain.challenge.ChallengeParticipation;
-import capstone.server.domain.challenge.JoinStatus;
-import capstone.server.domain.challenge.RoleType;
-import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
-import capstone.server.dto.challenge.ChallengeJoinRequestDto;
-import capstone.server.dto.challenge.ChallengeParticipationResponseDto;
-import capstone.server.dto.challenge.ChallengeSaveRequestDto;
+import capstone.server.domain.challenge.*;
+import capstone.server.dto.challenge.*;
 import capstone.server.exception.CustomException;
 import capstone.server.exception.ErrorCode;
 import capstone.server.repository.UserRepository;
@@ -75,7 +69,7 @@ public class ChallengeService {
         }
 
         User findUser = userRepository.findById(requestDto.getUserId())
-                                                .orElseThrow((() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다")));
+                                      .orElseThrow((() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다")));
 
         challengeParticipationRepository.save(ChallengeParticipation.builder()
                                                                     .challenge(findChallenge)
@@ -86,23 +80,27 @@ public class ChallengeService {
                                                                     .build());
 
 
+    }
 
+    @Transactional
+    public void updateJoinStatus(ChallengeJoinStatusUpdateDto updateDto) {
+        ChallengeParticipation participation = challengeParticipationRepository.findById(updateDto.getChallengeParticipationId())
+                                                                               .orElseThrow(() -> new IllegalArgumentException("테이블에 참가정보가 존재하지 않습니다"));
+        participation.changeJoinStatus(updateDto.getJoinStatus());
 
 
     }
 
+    //챌린지 참가가능 여부확인(인원)
     @Transactional(readOnly = true)
     public boolean isFullChallengeUsers(Challenge challenge) {
         Integer maxJoinNum = challenge.getMaxJoinNum();
         return challengeParticipationRepository.findWithPagingByChallengeAndJoinStatus(challenge, JoinStatus.SUCCEEDED,
-                PageRequest.of(0, maxJoinNum)).size()==maxJoinNum;
-    }
-    @Transactional(readOnly = true)
-    public List<Challenge> findAll() {
-
-        return challengeRepository.findAll();
+                                                       PageRequest.of(0, maxJoinNum))
+                                               .size() == maxJoinNum;
     }
 
+    //챌린지 참가 유저확인
     @Transactional(readOnly = true)
     public List<ChallengeParticipationResponseDto> findUsers(Long id) {
         Challenge challenge = challengeRepository.findById(id)
@@ -115,12 +113,8 @@ public class ChallengeService {
 
     }
 
-    @Transactional
-    public void updateJoinStatus(ChallengeJoinStatusUpdateDto updateDto) {
-        ChallengeParticipation participation = challengeParticipationRepository.findById(updateDto.getChallengeParticipationId())
-                                                                               .orElseThrow(() -> new IllegalArgumentException("테이블에 참가정보가 존재하지 않습니다"));
-        participation.changeJoinStatus(updateDto.getJoinStatus());
-
+    @Transactional(readOnly = true)
+    public List<ChallengeResponeDto> searchChallenge(ChallengeSearch challengeSearch) {
 
     }
 }
