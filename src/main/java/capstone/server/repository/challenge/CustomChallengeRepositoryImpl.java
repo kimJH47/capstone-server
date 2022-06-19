@@ -37,7 +37,4 @@ public class CustomChallengeRepositoryImpl implements CustomChallengeRepository 
     public BooleanExpression eqStatus(BucketStatus challengeStatus) {
         return challengeStatus != null ? challenge.challengeStatus.eq(challengeStatus) : null;
     }
-
-
-
 }
