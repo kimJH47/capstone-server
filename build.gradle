@@ -54,7 +54,6 @@ dependencies {
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
 	//aws s3
-	implementation'org.springframework.cloud:spring-cloud-starter-aws:2.2.5.RELEASE'
 	//s3 mock
 	implementation 'io.findify:s3mock_2.13:0.2.6'
 

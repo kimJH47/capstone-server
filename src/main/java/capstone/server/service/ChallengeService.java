@@ -10,7 +10,7 @@ import capstone.server.exception.ErrorCode;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
 import capstone.server.repository.challenge.ChallengeRepository;
-import capstone.server.repository.challenge.CustomChallengeRepositoryImpl;
+import capstone.server.repository.challenge.ChallengeRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
     private final ChallengeParticipationRepository challengeParticipationRepository;
-    private final CustomChallengeRepositoryImpl customChallengeRepository;
+    private final ChallengeRepositoryImpl customChallengeRepository;
     @Transactional
     public void save(ChallengeSaveRequestDto requestDto) {
         User findUser = userRepository.findById(requestDto.getUserId())
@@ -44,7 +44,7 @@ public class ChallengeService {
                                                                     .joinTime(requestDto.getUploadTime())
                                                                     .requestTime(requestDto.getUploadTime())
                                                                     .joinStatus(JoinStatus.SUCCEEDED)
-                                                                    .roleType(RoleType.ADMIN)
+                                                                    .challengeRoleType(ChallengeRoleType.ADMIN)
                                                                     .build());
 
     }
@@ -77,7 +77,7 @@ public class ChallengeService {
                                                                     .user(findUser)
                                                                     .joinStatus(JoinStatus.WAIT)
                                                                     .requestTime(requestDto.getRequestTime())
-                                                                    .roleType(RoleType.MEMBER)
+                                                                    .challengeRoleType(ChallengeRoleType.MEMBER)
                                                                     .build());
 
 

@@ -3,7 +3,6 @@ package capstone.server.controller;
 
 import capstone.server.dto.bucket.*;
 import capstone.server.service.BucketService;
-import capstone.server.service.ImageStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class BucketController {
 
     private final BucketService bucketService;
-    private final ImageStorageService imageStorageService;
+   // private final ImageStorageService imageStorageService;
 
     //서버주소/api/buckets
 //    @PostMapping(value = "/buckets",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -55,8 +55,8 @@ public class BucketController {
         }
         Long saveBucketId = bucketService.saveBucket(requestDto);
         if(!multipartFiles.isEmpty()){
-            List<String> urls = imageStorageService.BucketImageUploadToS3(saveBucketId,multipartFiles);
-            return ResponseEntity.ok().body(urls);
+            //List<String> urls = imageStorageService.BucketImageUploadToS3(saveBucketId,multipartFiles);
+            return ResponseEntity.ok().body("urls");
         }
         return ResponseEntity.ok().body("버킷생성완료");
 
@@ -64,7 +64,8 @@ public class BucketController {
     //이미지 저장 api
     @PostMapping("/buckets/{id}/images")
     public ResponseEntity<?> save(@PathVariable("id")Long id,@RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
-        List<String> uploadUrls = imageStorageService.BucketImageUploadToS3(id, multipartFiles);
+        List<String> uploadUrls = new ArrayList<>();
+        //uploadUrls =imageStorageService.BucketImageUploadToS3(id, multipartFiles);
         return ResponseEntity.ok()
                              .body(uploadUrls);
     }

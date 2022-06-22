@@ -11,10 +11,11 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static capstone.server.domain.challenge.QChallenge.challenge;
+import static capstone.server.domain.challenge.QChallengeTag.challengeTag;
 
 
 @RequiredArgsConstructor
-public class CustomChallengeRepositoryImpl implements CustomChallengeRepository {
+public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -25,6 +26,9 @@ public class CustomChallengeRepositoryImpl implements CustomChallengeRepository 
     public List<Challenge> searchChallenge(ChallengeSearch challengeSearch) {
         return jpaQueryFactory.selectFrom(challenge)
                               .where(challenge.challengePrivacyStatus.eq(BucketPrivacyStatus.PUBLIC), eqTitle(challengeSearch.getTitle()), eqStatus(challengeSearch.getChallengeStatus()))
+                              .leftJoin(challengeTag.challenge)
+                              .on(challengeTag.content.in(challengeSearch.getTagList()))
+                              .distinct()
                               .limit(100)
                               .fetch();
     }
@@ -37,4 +41,6 @@ public class CustomChallengeRepositoryImpl implements CustomChallengeRepository 
     public BooleanExpression eqStatus(BucketStatus challengeStatus) {
         return challengeStatus != null ? challenge.challengeStatus.eq(challengeStatus) : null;
     }
+
+
 }

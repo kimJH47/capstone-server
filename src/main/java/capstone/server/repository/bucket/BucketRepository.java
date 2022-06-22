@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BucketRepository extends JpaRepository<Bucket, Long>,CustomBucketRepository {
+public interface BucketRepository extends JpaRepository<Bucket, Long>, BucketRepositoryCustom {
 
     List<Bucket> findAllByUser(User user);
 

@@ -5,6 +5,8 @@ import capstone.server.domain.bucket.BucketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 
 @Getter
 @AllArgsConstructor
@@ -15,5 +17,6 @@ public class ChallengeSearch {
     private BucketPrivacyStatus challengePrivacyStatus;
     private BucketStatus challengeStatus;
     private Integer maxJoinNum;
+    private List<String> tagList;
 
 }

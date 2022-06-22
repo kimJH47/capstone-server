@@ -10,7 +10,7 @@ import java.util.Optional;
 
 
 @RequiredArgsConstructor
-public class CustomBucketRepositoryImpl implements CustomBucketRepository{
+public class BucketRepositoryImpl implements BucketRepositoryCustom {
 
 
     private final JPAQueryFactory jpaQueryFactory;

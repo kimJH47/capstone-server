@@ -8,6 +8,7 @@ public class ChallengeTag {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "challenge_tag_id")
     private Long id;
 
     private String content;

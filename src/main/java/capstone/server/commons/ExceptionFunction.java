@@ -2,6 +2,6 @@ package capstone.server.commons;
 
 
 @FunctionalInterface
-public interface ExceptionFuntion<T, R> {
+public interface ExceptionFunction<T, R> {
     R apply(T r) throws Exception;
 }

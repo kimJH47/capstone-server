@@ -1,7 +1,6 @@
 package capstone.server.controller;
 
 
-import capstone.server.service.ImageStorageService;
 import capstone.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class UserController {
     private final UserService userService;
-    private final ImageStorageService imageStorageService;
+   //private final ImageStorageService imageStorageService;
 
     @GetMapping("/users")
     public ResponseEntity<?> findByUsers() {

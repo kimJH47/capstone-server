@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum RoleType {
+public enum ChallengeRoleType {
     ADMIN("ROLE_ADMIN","챌린지 관리자"),
     MEMBER("ROLE_MEMBER","일반맴버");
 

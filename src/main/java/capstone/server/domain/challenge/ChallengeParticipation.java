@@ -36,7 +36,7 @@ public class ChallengeParticipation {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private RoleType roleType;
+    private ChallengeRoleType challengeRoleType;
     @Enumerated(EnumType.STRING)
     private JoinStatus joinStatus;
     //버킷완료 여부 객체 뭘쓸까...,

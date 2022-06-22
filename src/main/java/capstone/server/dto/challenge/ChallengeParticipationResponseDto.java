@@ -2,8 +2,8 @@ package capstone.server.dto.challenge;
 
 
 import capstone.server.domain.challenge.ChallengeParticipation;
+import capstone.server.domain.challenge.ChallengeRoleType;
 import capstone.server.domain.challenge.JoinStatus;
-import capstone.server.domain.challenge.RoleType;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class ChallengeParticipationResponseDto {
     @NotNull
     private Long challengeId;
     private String userName;
-    private RoleType roleType;
+    private ChallengeRoleType challengeRoleType;
     private JoinStatus joinStatus;
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime requestTime;
@@ -37,7 +37,7 @@ public class ChallengeParticipationResponseDto {
         this.userName = challengeParticipation.getUser()
                                               .getName();
 
-        this.roleType = challengeParticipation.getRoleType();
+        this.challengeRoleType = challengeParticipation.getChallengeRoleType();
         this.joinStatus = challengeParticipation.getJoinStatus();
 
 

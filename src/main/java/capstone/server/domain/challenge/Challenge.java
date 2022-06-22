@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -39,6 +40,11 @@ public class Challenge {
     private Integer maxJoinNum;
     private LocalDateTime uploadTime;
     private LocalDateTime modifiedTime;
+
+    //태그검색시 사용
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    private List<ChallengeTag> challengeTagList;
+
 
     public void changeUser(User user) {
         this.user = user;

@@ -5,7 +5,7 @@ import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
 import capstone.server.domain.challenge.JoinStatus;
-import capstone.server.domain.challenge.RoleType;
+import capstone.server.domain.challenge.ChallengeRoleType;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
@@ -91,7 +91,7 @@ class ChallengeControllerTest {
 
         assertAll(() -> {
             assertEquals(challengeParticipation.getId(),1L);
-            assertEquals(challengeParticipation.getRoleType(), RoleType.ADMIN);
+            assertEquals(challengeParticipation.getChallengeRoleType(), ChallengeRoleType.ADMIN);
             assertEquals(challengeParticipation.getJoinStatus(), JoinStatus.SUCCEEDED);
 
         });
@@ -119,7 +119,7 @@ class ChallengeControllerTest {
 
         assertAll(() -> {
             assertEquals(challengeParticipation.getId(),1L);
-            assertEquals(challengeParticipation.getRoleType(), RoleType.MEMBER);
+            assertEquals(challengeParticipation.getChallengeRoleType(), ChallengeRoleType.MEMBER);
             assertEquals(challengeParticipation.getJoinStatus(), JoinStatus.WAIT);
 
         });
@@ -166,7 +166,7 @@ class ChallengeControllerTest {
 
         ChallengeParticipation save1 = challengeParticipationRepository.save(ChallengeParticipation.builder()
                                                                                                    .joinStatus(JoinStatus.WAIT)
-                                                                                                   .roleType(RoleType.MEMBER)
+                                                                                                   .challengeRoleType(ChallengeRoleType.MEMBER)
                                                                                                    .user(save)
                                                                                                    .challenge(challenge)
                                                                                                    .build());

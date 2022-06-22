@@ -4,10 +4,10 @@ import capstone.server.domain.User;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
+import capstone.server.domain.challenge.ChallengeRoleType;
 import capstone.server.domain.challenge.JoinStatus;
-import capstone.server.domain.challenge.RoleType;
-import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
+import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
 import capstone.server.dto.challenge.ChallengeParticipationResponseDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
 import capstone.server.exception.CustomException;
@@ -40,6 +40,7 @@ class ChallengeServiceTest {
     @Autowired
     private ChallengeParticipationRepository challengeParticipationRepository;
 
+
     @BeforeEach
     public void 테스트유저_생성() {
 
@@ -53,7 +54,15 @@ class ChallengeServiceTest {
                                    .collect(Collectors.toList());
 
     }
+    @Test
+    @DisplayName("태그리스트가 포함된 ChallengeSearch를 넘기면 조건에 맞는 ChallengeList가 반환 되어야함")
+    public void challengeSearch() throws Exception{
+        //given
 
+        //when
+
+        //then
+    }
     @Test
     @DisplayName("챌린지가 성공적로 저장되어야함")
     public void 챌린지저장_테스트() throws Exception{
@@ -104,7 +113,7 @@ class ChallengeServiceTest {
         //then
         ChallengeParticipationResponseDto responseDto = users.get(1);
         Assertions.assertEquals(responseDto.getChallengeId(), 1L);
-        Assertions.assertEquals(responseDto.getRoleType(), RoleType.MEMBER);
+        Assertions.assertEquals(responseDto.getChallengeRoleType(), ChallengeRoleType.MEMBER);
         Assertions.assertEquals(responseDto.getUserName(),"test1");
 
 
@@ -128,7 +137,7 @@ class ChallengeServiceTest {
             User save = userRepository.save(new User());
             challengeParticipationRepository.save(ChallengeParticipation.builder()
                                                                         .user(save)
-                                                                        .roleType(RoleType.MEMBER)
+                                                                        .challengeRoleType(ChallengeRoleType.MEMBER)
                                                                         .joinStatus(JoinStatus.SUCCEEDED)
                                                                         .challenge(challenge)
                                                                         .joinTime(LocalDateTime.now())

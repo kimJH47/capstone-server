@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CustomBucketRepository {
+public interface BucketRepositoryCustom {
 
     List<Optional<Bucket>> searchBucket(BucketSearch bucketSearch);
 }
