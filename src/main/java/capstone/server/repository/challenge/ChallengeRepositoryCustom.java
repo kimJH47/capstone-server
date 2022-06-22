@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface ChallengeRepositoryCustom {
 
-
     List<Challenge> searchChallenge(ChallengeSearch challengeSearch);
 }

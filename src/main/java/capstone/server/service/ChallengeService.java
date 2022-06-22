@@ -10,7 +10,6 @@ import capstone.server.exception.ErrorCode;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
 import capstone.server.repository.challenge.ChallengeRepository;
-import capstone.server.repository.challenge.ChallengeRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,15 +25,23 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
     private final ChallengeParticipationRepository challengeParticipationRepository;
-    private final ChallengeRepositoryImpl customChallengeRepository;
     @Transactional
     public void save(ChallengeSaveRequestDto requestDto) {
+
         User findUser = userRepository.findById(requestDto.getUserId())
                                       .orElseThrow(() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다"));
         Challenge challenge = requestDto.toEntity();
         challenge.changeUser(findUser);
 
+        List<String> tagList = requestDto.getTagList();
+        if (tagList.size() != 0) {
+            long count = tagList.stream()
+                                .map(s -> new ChallengeTag(s, challenge))
+                                .count();
+            System.out.println("Tag Count : " + count);
+        }
         challengeRepository.save(challenge);
+
 
 
         //챌린지참가 정보에 바로 추가하기
@@ -116,7 +123,7 @@ public class ChallengeService {
 
     @Transactional(readOnly = true)
     public List<ChallengeResponseDto> searchChallenges(ChallengeSearch challengeSearch) {
-        return customChallengeRepository.searchChallenge(challengeSearch)
+        return challengeRepository.searchChallenge(challengeSearch)
                                  .stream()
                                  .map(challenge -> new ChallengeResponseDto(challenge))
                                  .collect(Collectors.toList());

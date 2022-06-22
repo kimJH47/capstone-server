@@ -2,14 +2,8 @@ package capstone.server.service;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
-import capstone.server.domain.challenge.Challenge;
-import capstone.server.domain.challenge.ChallengeParticipation;
-import capstone.server.domain.challenge.ChallengeRoleType;
-import capstone.server.domain.challenge.JoinStatus;
-import capstone.server.dto.challenge.ChallengeJoinRequestDto;
-import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
-import capstone.server.dto.challenge.ChallengeParticipationResponseDto;
-import capstone.server.dto.challenge.ChallengeSaveRequestDto;
+import capstone.server.domain.challenge.*;
+import capstone.server.dto.challenge.*;
 import capstone.server.exception.CustomException;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
@@ -23,9 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 
 @SpringBootTest
 @Transactional
@@ -55,13 +53,45 @@ class ChallengeServiceTest {
 
     }
     @Test
-    @DisplayName("태그리스트가 포함된 ChallengeSearch를 넘기면 조건에 맞는 ChallengeList가 반환 되어야함")
-    public void challengeSearch() throws Exception{
+    @DisplayName("ChallengeSearch 를 넘기면 조건에 맞는 ChallengeList 가 반환 되어야함")
+    public void challengeBasicSearch() throws Exception{
         //given
-
+        List<String> tagList = new ArrayList<>();
+        tagList.add("여행");
+        tagList.add("힉압");
+        tagList.add("낚시");
+        ChallengeSearch challengeSearch = new ChallengeSearch();
+        challengeSearch.setTitle("여행");
+        challengeSearch.setTagList(tagList);
+        createChallenge();
         //when
-
+        List<ChallengeResponseDto> challengeResponseDtos = challengeService.searchChallenges(challengeSearch);
         //then
+        challengeResponseDtos.stream()
+                             .map(ChallengeResponseDto::getTitle)
+                             .allMatch(s -> s.equals("여행"));
+
+    }
+    @Test
+    @DisplayName("ChallengeSearch 를 넘기면 조건에 맞는 ChallengeList 가 반환 되어야함")
+    public void challengeTagSearch() throws Exception{
+
+        //given
+        List<String> tagList = new ArrayList<>();
+        tagList.add("여행");
+        tagList.add("힉압");
+        tagList.add("낚시");
+        ChallengeSearch challengeSearch = new ChallengeSearch();
+        challengeSearch.setTitle("여행");
+        challengeSearch.setTagList(tagList);
+        createChallenge();
+        //when
+        List<ChallengeResponseDto> challengeResponseDtos = challengeService.searchChallenges(challengeSearch);
+        //then
+        challengeResponseDtos.stream()
+                             .map(ChallengeResponseDto::getTitle)
+                             .allMatch(s -> s.equals("여행"));
+
     }
     @Test
     @DisplayName("챌린지가 성공적로 저장되어야함")
@@ -86,7 +116,44 @@ class ChallengeServiceTest {
 
 
     }
+    @Test
+    @DisplayName("태그들과 함깨하는 챌린지저장")
+    public void 챌린지저장_테스트_With_태그() throws Exception{
+        //given
+        List<String> tagList = new ArrayList<>();
+        tagList.add("여행");
+        tagList.add("도구");
+        tagList.add("test");
+        tagList.add("사랑");
+        ChallengeSaveRequestDto requestDto = ChallengeSaveRequestDto.builder()
+                                                                    .content("챌린지 1")
+                                                                    .maxJoinNum(2)
+                                                                    .uploadTime(LocalDateTime.now())
+                                                                    .modifiedTime(LocalDateTime.now())
+                                                                    .title("챌린지 제목")
+                                                                    .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                                                    .userId(1L)
+                                                                    .tagList(tagList)
+                                                                    .build();
 
+        challengeService.save(requestDto);
+        //when
+        List<Challenge> challenges = challengeRepository.findAll();
+        //then
+        Challenge challenge = challenges.get(0);
+        Assertions.assertEquals(challenge.getId(), 1L);
+        Assertions.assertEquals(challenge.getTitle(), requestDto.getTitle());
+        List<ChallengeTag> tagList1 = challenge.getTagList();
+
+        List<String> strings = tagList1.stream()
+                                       .map(ChallengeTag::getContent)
+                                       .collect(Collectors.toList());
+
+        assertThat(strings, containsInAnyOrder(tagList.toArray()));
+
+
+
+    }
 
 
     @Test
@@ -185,6 +252,27 @@ class ChallengeServiceTest {
                                                      .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                      .userId(1L)
                                                      .build());
+
+        challengeService.save(ChallengeSaveRequestDto.builder()
+                                                     .content("챌린지 2")
+                                                     .maxJoinNum(5)
+                                                     .uploadTime(LocalDateTime.now())
+                                                     .modifiedTime(LocalDateTime.now())
+                                                     .title("여행")
+                                                     .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                                     .userId(1L)
+                                                     .build());
+
+        challengeService.save(ChallengeSaveRequestDto.builder()
+                                                     .content("챌린지 1")
+                                                     .maxJoinNum(5)
+                                                     .uploadTime(LocalDateTime.now())
+                                                     .modifiedTime(LocalDateTime.now())
+                                                     .title("낚시")
+                                                     .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                                     .userId(1L)
+                                                     .build());
+
     }
     private void createUser(String test) {
         userRepository.save(User.builder()

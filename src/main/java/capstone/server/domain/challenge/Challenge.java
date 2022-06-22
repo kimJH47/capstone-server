@@ -42,13 +42,12 @@ public class Challenge {
     private LocalDateTime modifiedTime;
 
     //태그검색시 사용
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private List<ChallengeTag> challengeTagList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id",cascade = CascadeType.ALL)
+    private List<ChallengeTag> tagList;
 
 
     public void changeUser(User user) {
         this.user = user;
     }
-
 
 }

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static capstone.server.domain.challenge.QChallenge.challenge;
-import static capstone.server.domain.challenge.QChallengeTag.challengeTag;
 
 
 @RequiredArgsConstructor
@@ -25,10 +24,9 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
     @Override
     public List<Challenge> searchChallenge(ChallengeSearch challengeSearch) {
         return jpaQueryFactory.selectFrom(challenge)
-                              .where(challenge.challengePrivacyStatus.eq(BucketPrivacyStatus.PUBLIC), eqTitle(challengeSearch.getTitle()), eqStatus(challengeSearch.getChallengeStatus()))
-                              .leftJoin(challengeTag.challenge)
-                              .on(challengeTag.content.in(challengeSearch.getTagList()))
-                              .distinct()
+                              .where(challenge.challengePrivacyStatus.eq(BucketPrivacyStatus.PUBLIC),
+                                      eqTitle(challengeSearch.getTitle()),
+                                      eqStatus(challengeSearch.getChallengeStatus()))
                               .limit(100)
                               .fetch();
     }
@@ -41,6 +39,8 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
     public BooleanExpression eqStatus(BucketStatus challengeStatus) {
         return challengeStatus != null ? challenge.challengeStatus.eq(challengeStatus) : null;
     }
-
+    public BooleanExpression eqMaxJoinNum(Integer num) {
+        return num != null ? challenge.maxJoinNum.loe(num) : null;
+    }
 
 }

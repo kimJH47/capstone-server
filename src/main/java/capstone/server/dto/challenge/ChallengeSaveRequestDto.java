@@ -14,6 +14,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Builder
@@ -34,6 +35,8 @@ public class ChallengeSaveRequestDto {
     private LocalDateTime uploadTime;
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime modifiedTime;
+
+    private List<String> tagList;
     public Challenge toEntity() {
         /**
          * 챌린지 생성 기본값
