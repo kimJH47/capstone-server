@@ -66,9 +66,10 @@ class ChallengeServiceTest {
         createChallenge();
         //when
         List<ChallengeResponseDto> challengeResponseDtos = challengeService.searchChallenges(challengeSearch);
+
         //then
         challengeResponseDtos.stream()
-                             .map(ChallengeResponseDto::getTitle)
+                             .map(challenge -> challenge.getTitle())
                              .allMatch(s -> s.equals("여행"));
 
     }
@@ -79,17 +80,15 @@ class ChallengeServiceTest {
         //given
         List<String> tagList = new ArrayList<>();
         tagList.add("여행");
-        tagList.add("힉압");
-        tagList.add("낚시");
         ChallengeSearch challengeSearch = new ChallengeSearch();
         challengeSearch.setTitle("여행");
         challengeSearch.setTagList(tagList);
         createChallenge();
         //when
-        List<ChallengeResponseDto> challengeResponseDtos = challengeService.searchChallenges(challengeSearch);
+        List<Challenge> challengeResponseDtos = challengeRepository.searchToTag(challengeSearch);
         //then
         challengeResponseDtos.stream()
-                             .map(ChallengeResponseDto::getTitle)
+                             .map(Challenge::getTitle)
                              .allMatch(s -> s.equals("여행"));
 
     }
@@ -253,6 +252,9 @@ class ChallengeServiceTest {
                                                      .userId(1L)
                                                      .build());
 
+        ArrayList<String > tags = new ArrayList<>();
+        tags.add("여행");
+
         challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 2")
                                                      .maxJoinNum(5)
@@ -261,6 +263,7 @@ class ChallengeServiceTest {
                                                      .title("여행")
                                                      .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                      .userId(1L)
+                                                     .tagList(tags)
                                                      .build());
 
         challengeService.save(ChallengeSaveRequestDto.builder()

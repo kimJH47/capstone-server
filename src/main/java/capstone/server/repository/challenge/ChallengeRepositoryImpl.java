@@ -4,6 +4,7 @@ import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
 import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeSearch;
+import capstone.server.domain.challenge.QChallengeTag;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,14 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
                               .limit(100)
                               .fetch();
     }
-
+    @Override
+    public List<Challenge> searchToTag(ChallengeSearch challengeSearch) {
+        return jpaQueryFactory.selectFrom(challenge)
+                              .where(QChallengeTag.challengeTag.content.in(challengeSearch.getTagList()))
+                              .join(challenge)
+                              .limit(100)
+                              .fetch();
+    }
 
     public BooleanExpression eqTitle(String title) {
         return title != null ? challenge.title.eq(title) : null;

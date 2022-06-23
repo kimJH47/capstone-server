@@ -34,7 +34,7 @@ public class ChallengeService {
         challenge.changeUser(findUser);
 
         List<String> tagList = requestDto.getTagList();
-        if (tagList.size() != 0) {
+        if (tagList != null) {
             long count = tagList.stream()
                                 .map(s -> new ChallengeTag(s, challenge))
                                 .count();
