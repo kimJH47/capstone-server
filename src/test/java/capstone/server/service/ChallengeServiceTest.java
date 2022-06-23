@@ -74,7 +74,7 @@ class ChallengeServiceTest {
 
     }
     @Test
-    @DisplayName("ChallengeSearch 를 넘기면 조건에 맞는 ChallengeList 가 반환 되어야함")
+    @DisplayName("ChallengeSearch 와 태그리스트를 넘기면 조건에 맞는 ChallengeList 가 반환 되어야함")
     public void challengeTagSearch() throws Exception{
 
         //given

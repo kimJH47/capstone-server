@@ -50,4 +50,10 @@ public class Challenge {
         this.user = user;
     }
 
+    public void updateTagList(List<ChallengeTag> tagList) {
+        for (ChallengeTag challengeTag : tagList) {
+            tagList.add(challengeTag);
+        }
+    }
+
 }

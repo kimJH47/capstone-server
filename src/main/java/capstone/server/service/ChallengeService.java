@@ -32,13 +32,11 @@ public class ChallengeService {
                                       .orElseThrow(() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다"));
         Challenge challenge = requestDto.toEntity();
         challenge.changeUser(findUser);
-
         List<String> tagList = requestDto.getTagList();
         if (tagList != null) {
             long count = tagList.stream()
                                 .map(s -> new ChallengeTag(s, challenge))
                                 .count();
-            System.out.println("Tag Count : " + count);
         }
         challengeRepository.save(challenge);
 

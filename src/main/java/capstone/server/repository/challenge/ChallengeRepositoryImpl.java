@@ -4,7 +4,6 @@ import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
 import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeSearch;
-import capstone.server.domain.challenge.QChallengeTag;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static capstone.server.domain.challenge.QChallenge.challenge;
+import static capstone.server.domain.challenge.QChallengeTag.challengeTag;
 
 
 @RequiredArgsConstructor
@@ -33,10 +33,16 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
     }
     @Override
     public List<Challenge> searchToTag(ChallengeSearch challengeSearch) {
-        return jpaQueryFactory.selectFrom(challenge)
-                              .where(QChallengeTag.challengeTag.content.in(challengeSearch.getTagList()))
-                              .join(challenge)
-                              .limit(100)
+        //join 왼쪽 외래
+        return jpaQueryFactory.select(challenge)
+                              .from(challenge)
+                              .leftJoin(challenge.tagList, challengeTag)
+                              .on(challengeTag.content.in(challengeSearch.getTagList()))
+                              .fetchJoin()
+                              .where(challenge.challengePrivacyStatus.eq(BucketPrivacyStatus.PUBLIC),
+                                      eqTitle(challengeSearch.getTitle()),
+                                      eqStatus(challengeSearch.getChallengeStatus()))
+                              .distinct()
                               .fetch();
     }
 
