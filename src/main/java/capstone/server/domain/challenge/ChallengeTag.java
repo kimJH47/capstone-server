@@ -15,18 +15,12 @@ public class ChallengeTag {
     private Long id;
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
-    public ChallengeTag(String content, Challenge challenge) {
+    public ChallengeTag(String content) {
         this.content = content;
-        challenge.getTagList()
-                 .add(this);
-    }
-
-    public ChallengeTag() {
-
     }
 
     public void changeChallenge(Challenge challenge){

@@ -14,6 +14,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -36,7 +37,8 @@ public class ChallengeSaveRequestDto {
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime modifiedTime;
 
-    private List<String> tagList;
+    private List<String> tagList = new ArrayList<>();
+
     public Challenge toEntity() {
         /**
          * 챌린지 생성 기본값
@@ -50,6 +52,7 @@ public class ChallengeSaveRequestDto {
                         .maxJoinNum(this.getMaxJoinNum())
                         .challengeStatus(BucketStatus.ONGOING)
                         .challengePrivacyStatus(this.getChallengePrivacyStatus())
+                        .tagList(new ArrayList<>())
                         .build();
     }
 }

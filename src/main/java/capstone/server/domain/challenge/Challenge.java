@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,7 +44,7 @@ public class Challenge {
 
     //태그검색시 사용
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id",cascade = CascadeType.ALL)
-    private List<ChallengeTag> tagList;
+    private List<ChallengeTag> tagList = new ArrayList<>();
 
 
     public void changeUser(User user) {
@@ -51,9 +52,13 @@ public class Challenge {
     }
 
     public void updateTagList(List<ChallengeTag> tagList) {
-        for (ChallengeTag challengeTag : tagList) {
-            tagList.add(challengeTag);
-        }
+        tagList.stream()
+                .forEach(challengeTag -> updateTag(challengeTag));
+    }
+
+    private void updateTag(ChallengeTag challengeTag) {
+        this.tagList.add(challengeTag);
+        challengeTag.changeChallenge(this);
     }
 
 }

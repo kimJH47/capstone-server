@@ -33,10 +33,11 @@ public class ChallengeService {
         Challenge challenge = requestDto.toEntity();
         challenge.changeUser(findUser);
         List<String> tagList = requestDto.getTagList();
-        if (tagList != null) {
-            long count = tagList.stream()
-                                .map(s -> new ChallengeTag(s, challenge))
-                                .count();
+        if (tagList.size() != 0) {
+            List<ChallengeTag> collect = tagList.stream()
+                                                .map(s -> new ChallengeTag(s))
+                                                .collect(Collectors.toList());
+            challenge.updateTagList(collect);
         }
         challengeRepository.save(challenge);
 

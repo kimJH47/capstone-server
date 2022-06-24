@@ -81,15 +81,15 @@ class ChallengeServiceTest {
         List<String> tagList = new ArrayList<>();
         tagList.add("여행");
         ChallengeSearch challengeSearch = new ChallengeSearch();
-        challengeSearch.setTitle("여행");
         challengeSearch.setTagList(tagList);
         createChallenge();
         //when
-        List<Challenge> challengeResponseDtos = challengeRepository.searchToTag(challengeSearch);
+        List<Challenge> challenges = challengeRepository.searchToTag(challengeSearch);
         //then
-        challengeResponseDtos.stream()
-                             .map(Challenge::getTitle)
-                             .allMatch(s -> s.equals("여행"));
+        challenges.stream()
+                  .map(Challenge::getTitle)
+                  .allMatch(s -> s.equals("여행"));
+        Assertions.assertEquals(challenges.size(), 3);
 
     }
     @Test
@@ -142,8 +142,8 @@ class ChallengeServiceTest {
         Challenge challenge = challenges.get(0);
         Assertions.assertEquals(challenge.getId(), 1L);
         Assertions.assertEquals(challenge.getTitle(), requestDto.getTitle());
-        List<ChallengeTag> tagList1 = challenge.getTagList();
 
+        List<ChallengeTag> tagList1 = challenge.getTagList();
         List<String> strings = tagList1.stream()
                                        .map(ChallengeTag::getContent)
                                        .collect(Collectors.toList());
@@ -183,8 +183,6 @@ class ChallengeServiceTest {
         Assertions.assertEquals(responseDto.getUserName(),"test1");
 
 
-        Challenge challenge = challengeRepository.findById(1L)
-                                                 .get();
 
 
     }
@@ -242,7 +240,9 @@ class ChallengeServiceTest {
         Assertions.assertEquals(challenge.getJoinStatus(), JoinStatus.SUCCEEDED);
     }
     private void createChallenge() {
-         challengeService.save(ChallengeSaveRequestDto.builder()
+        ArrayList<String > tags = new ArrayList<>();
+        tags.add("여행");
+        challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 1")
                                                      .maxJoinNum(5)
                                                      .uploadTime(LocalDateTime.now())
@@ -250,10 +250,9 @@ class ChallengeServiceTest {
                                                      .title("챌린지 제목")
                                                      .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                      .userId(1L)
+                                                     .tagList(tags)
                                                      .build());
 
-        ArrayList<String > tags = new ArrayList<>();
-        tags.add("여행");
 
         challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 2")
@@ -274,6 +273,7 @@ class ChallengeServiceTest {
                                                      .title("낚시")
                                                      .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                      .userId(1L)
+                                                     .tagList(tags)
                                                      .build());
 
     }

@@ -33,12 +33,11 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
     }
     @Override
     public List<Challenge> searchToTag(ChallengeSearch challengeSearch) {
-        //join 왼쪽 외래
+        //join 왼쪽 외래키
         return jpaQueryFactory.select(challenge)
                               .from(challenge)
                               .leftJoin(challenge.tagList, challengeTag)
                               .on(challengeTag.content.in(challengeSearch.getTagList()))
-                              .fetchJoin()
                               .where(challenge.challengePrivacyStatus.eq(BucketPrivacyStatus.PUBLIC),
                                       eqTitle(challengeSearch.getTitle()),
                                       eqStatus(challengeSearch.getChallengeStatus()))

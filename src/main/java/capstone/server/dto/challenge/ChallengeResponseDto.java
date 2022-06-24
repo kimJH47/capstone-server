@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Builder
@@ -23,6 +24,8 @@ public class ChallengeResponseDto {
     private LocalDateTime uploadTime;
     private LocalDateTime modifiedTime;
 
+    private List<String> tagList;
+
     public ChallengeResponseDto(Challenge challenge) {
         this.title = challenge.getTitle();
         this.content = challenge.getContent();
@@ -31,5 +34,10 @@ public class ChallengeResponseDto {
         this.maxJoinNum = challenge.getMaxJoinNum();
         this.uploadTime = challenge.getUploadTime();
         this.modifiedTime = challenge.getModifiedTime();
+
+    }
+
+    public void updateTagList(List<String> tagList) {
+        this.tagList = tagList;
     }
 }
