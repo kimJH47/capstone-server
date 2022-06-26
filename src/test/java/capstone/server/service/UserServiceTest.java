@@ -1,8 +1,8 @@
 package capstone.server.service;
 
 import capstone.server.domain.User;
-import capstone.server.domain.UserRole;
 import capstone.server.dto.UserSaveRequestDto;
+import capstone.server.oauth.entity.RoleType;
 import capstone.server.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ class UserServiceTest {
                                    .orElse(new User());
         //then
         assertThat(findUser.getName()).isEqualTo("myName");
-        assertThat(findUser.getUserRole()).isEqualTo(UserRole.GUEST);
+        assertThat(findUser.getRoleType()).isEqualTo(RoleType.GUEST);
         assertThat(findUser.getEmail()).isEqualTo("kmr2644@gmail.com");
     }
 

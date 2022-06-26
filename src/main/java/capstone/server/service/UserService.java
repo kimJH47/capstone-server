@@ -1,8 +1,8 @@
 package capstone.server.service;
 
 import capstone.server.domain.User;
-import capstone.server.domain.UserRole;
 import capstone.server.dto.UserSaveRequestDto;
+import capstone.server.oauth.entity.RoleType;
 import capstone.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,10 @@ public class UserService {
         User user = User.builder()
                         .email(requestDto.getEmail())
                         .name(requestDto.getNickName())
-                        .userRole(UserRole.GUEST)
+                        .roleType(RoleType.GUEST)
                         .build();
 
-        return userRepository.save(user).getId();
+        return userRepository.save(user).getUserId();
 
 
     }
