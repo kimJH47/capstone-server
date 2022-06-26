@@ -88,7 +88,7 @@ public class ChallengeController {
     }
 
     //챌린지 검색
-    @GetMapping("/challenge")
+    @PostMapping("/challenge/search")
     public ResponseEntity<?> searchChallenge(@RequestBody @Valid ChallengeSearch challengeSearch,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()

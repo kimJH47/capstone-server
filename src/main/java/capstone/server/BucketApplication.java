@@ -1,7 +1,7 @@
 package capstone.server;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @SpringBootApplication
 public class BucketApplication {
@@ -12,10 +12,8 @@ public class BucketApplication {
 
 	public static void main(String[] args) {
 
-		//SpringApplication.run(BucketApplication.class, args);
-		new SpringApplicationBuilder(BucketApplication.class)
-				.properties(APPLICATION_LOCATIONS)
-				.run(args);
+		SpringApplication.run(BucketApplication.class, args);
+
 
 	}
 

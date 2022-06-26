@@ -12,7 +12,7 @@ spring:
       max-request-size: 200MB
 
   profiles:
-    include: "oauth"
+    include: "auth"
 
   jpa:
     hibernate:

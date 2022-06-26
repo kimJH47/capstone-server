@@ -2,16 +2,14 @@ package capstone.server.controller;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
-import capstone.server.domain.challenge.Challenge;
-import capstone.server.domain.challenge.ChallengeParticipation;
-import capstone.server.domain.challenge.JoinStatus;
-import capstone.server.domain.challenge.ChallengeRoleType;
+import capstone.server.domain.challenge.*;
 import capstone.server.dto.challenge.ChallengeJoinRequestDto;
 import capstone.server.dto.challenge.ChallengeJoinStatusUpdateDto;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
 import capstone.server.repository.challenge.ChallengeRepository;
+import capstone.server.service.ChallengeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,15 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,10 +48,14 @@ class ChallengeControllerTest {
     private ChallengeParticipationRepository challengeParticipationRepository;
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private MockMvc mvc;
+
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    ChallengeService challengeService;
 
     @BeforeEach
     public void 테스트유저_생성() {
@@ -62,7 +67,11 @@ class ChallengeControllerTest {
 
     @Test
     @DisplayName("챌린지 생성 api 사용시 챌린지 생성이 완료되어야함")
+    @WithMockUser
     public void 챌린지생성_테스트() throws Exception{
+
+        ArrayList<String > tags = new ArrayList<>();
+        tags.add("여행");
         //given
         ChallengeSaveRequestDto requestDto = ChallengeSaveRequestDto.builder()
                                                                     .content("챌린지 1")
@@ -72,6 +81,7 @@ class ChallengeControllerTest {
                                                                     .title("챌린지 제목")
                                                                     .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                                     .userId(1L)
+                                                                    .tagList(tags)
                                                                     .build();
         //when
         //then
@@ -196,6 +206,24 @@ class ChallengeControllerTest {
 
 
     }
+
+    @Test
+    @DisplayName("챌린지 검색 테스트")
+    public void 챌린지검색API() throws Exception{
+        //given
+        createChallenge();
+        List<String> tagList = new ArrayList<>();
+        tagList.add("여행");
+        ChallengeSearch challengeSearch = new ChallengeSearch();
+        challengeSearch.setTagList(tagList);
+        //when
+        //then
+        mvc.perform(get("/api/challenge/search").contentType(MediaType.APPLICATION_JSON)
+                                               .content(objectMapper.writeValueAsString(challengeSearch)))
+           .andExpect(status().isOk())
+           .andDo(print());
+
+    }
     private Challenge createChallenge(int maxJoinNum, BucketPrivacyStatus privacyStatus, String title, String content) {
         User user = userRepository.findById(1L)
                                   .get();
@@ -210,6 +238,50 @@ class ChallengeControllerTest {
         return challengeRepository.save(challenge);
     }
 
+    private void createChallenge() {
+        ArrayList<String > tags = new ArrayList<>();
+        tags.add("여행");
+        challengeService.save(ChallengeSaveRequestDto.builder()
+                                                     .content("챌린지 1")
+                                                     .maxJoinNum(5)
+                                                     .uploadTime(LocalDateTime.now())
+                                                     .modifiedTime(LocalDateTime.now())
+                                                     .title("챌린지 제목")
+                                                     .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                                     .userId(1L)
+                                                     .tagList(tags)
+                                                     .build());
+
+
+        challengeService.save(ChallengeSaveRequestDto.builder()
+                                                     .content("챌린지 2")
+                                                     .maxJoinNum(5)
+                                                     .uploadTime(LocalDateTime.now())
+                                                     .modifiedTime(LocalDateTime.now())
+                                                     .title("여행")
+                                                     .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                                     .userId(1L)
+                                                     .tagList(tags)
+                                                     .build());
+
+        challengeService.save(ChallengeSaveRequestDto.builder()
+                                                     .content("챌린지 1")
+                                                     .maxJoinNum(5)
+                                                     .uploadTime(LocalDateTime.now())
+                                                     .modifiedTime(LocalDateTime.now())
+                                                     .title("낚시")
+                                                     .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                                     .userId(1L)
+                                                     .tagList(tags)
+                                                     .build());
+
+    }
+    private void createUser(String test) {
+        userRepository.save(User.builder()
+                                .name(test)
+                                .email("mail")
+                                .build());
+    }
 
 
 
