@@ -86,7 +86,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
         return null;
     }
 
-    private static UserPrincipal create(User user) {
+    public static UserPrincipal create(User user) {
         return new UserPrincipal(
                 user.getUserId(),
                 user.getPassword(),

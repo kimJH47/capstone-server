@@ -66,6 +66,13 @@ public class User extends BaseTimeEntity{
         this.profile = profile;
     }
 
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changeProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
     //생성자 대신 빌더패턴 이용
 
 }

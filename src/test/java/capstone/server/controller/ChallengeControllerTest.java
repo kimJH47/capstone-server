@@ -276,13 +276,5 @@ class ChallengeControllerTest {
                                                      .build());
 
     }
-    private void createUser(String test) {
-        userRepository.save(User.builder()
-                                .name(test)
-                                .email("mail")
-                                .build());
-    }
-
-
 
 }
