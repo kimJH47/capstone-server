@@ -119,6 +119,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 쿠키 기반 인가 Repository
      * 인가 응답을 연계 하고 검증할 때 사용.
      * */
+
     @Bean
     public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
         return new OAuth2AuthorizationRequestBasedOnCookieRepository();
@@ -144,7 +145,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
         return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
     }
-
     /*
      * Cors 설정
      * */
