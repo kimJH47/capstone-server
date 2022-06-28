@@ -71,7 +71,6 @@ public class SubBucketApiTest {
                                                                  .content("세부목표 내용입네다")
                                                                  .build();
 
-
         //when
         ResultActions resultActions = mockMvc.perform(post("/api/sub-bucket").contentType(MediaType.APPLICATION_JSON)
                                                                              .content(objectMapper.writeValueAsString(request)))

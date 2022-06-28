@@ -42,27 +42,39 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
-        ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
+
+        ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration()
+                                                                    .getRegistrationId()
+                                                                    .toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
         // -> null check / optional.get() 지양
-        User savedUser = userRepository.findByUserId(userInfo.getId())
-                                       .get();
+//        User savedUser = userRepository.findByUserId(userInfo.getId())
+//                                       .get();
         Optional<User> OsavedUser = userRepository.findByUserId(userInfo.getId());
 
-        if (savedUser!=null) {
-            if (providerType != savedUser.getProviderType()) {
-                throw new OAuthProviderMissMatchException(
-                        "Looks like you're signed up with " + providerType +
-                                " account. Please use your " + savedUser.getProviderType() + " account to login."
-                );
-            }
-            updateUser(savedUser, userInfo);
-        } else {
-            savedUser = createUser(userInfo, providerType);
-        }
+        if (!OsavedUser.isEmpty()) {
+            return UserPrincipal.create(OsavedUser.filter(user1 -> user1.getProviderType() != providerType)
+                                                  .map(user1 -> updateUser(user1, userInfo))
+                                                  .orElseThrow(() -> new OAuthProviderMissMatchException("Looks like you're signed up with " + providerType +
+                                                          " account. Please use your " + OsavedUser.get()
+                                                                                                   .getProviderType() + " account to login.")), user.getAttributes());
 
-        return UserPrincipal.create(savedUser, user.getAttributes());
+        } else {
+            User savedUser = createUser(userInfo, providerType);
+            return UserPrincipal.create(savedUser, user.getAttributes());
+        }
+//        if (savedUser!=null) {
+//            if (providerType != savedUser.getProviderType()) {
+//                throw new OAuthProviderMissMatchException(
+//                        "Looks like you're signed up with " + providerType +
+//                                " account. Please use your " + savedUser.getProviderType() + " account to login."
+//                );
+//            }
+//            updateUser(savedUser, userInfo);
+//        } else {
+//            savedUser = createUser(userInfo, providerType);
+//        }
     }
 
     private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
@@ -93,10 +105,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User updateUser(User user, OAuth2UserInfo userInfo) {
-        if (userInfo.getName() != null && !user.getUsername().equals(userInfo.getName())) {
+        if (userInfo.getName() != null && !user.getUsername()
+                                               .equals(userInfo.getName())) {
             user.changeName(userInfo.getName());
         }
-        if (userInfo.getImageUrl() != null && !user.getProfileImageUrl().equals(userInfo.getImageUrl())) {
+        if (userInfo.getImageUrl() != null && !user.getProfileImageUrl()
+                                                   .equals(userInfo.getImageUrl())) {
             user.changeProfileImageUrl(userInfo.getImageUrl());
         }
 
