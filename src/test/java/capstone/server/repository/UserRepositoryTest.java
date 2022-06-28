@@ -23,7 +23,7 @@ class UserRepositoryTest {
                                             .email("emailTest")
                                             .build());
         //when
-        Long id = save.getId();
+        Long id = save.getUserSeq();
         //then
 
         User byId = userRepository.getById(id);

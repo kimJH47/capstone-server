@@ -30,7 +30,7 @@ public class ChallengeParticipationResponseDto {
     public ChallengeParticipationResponseDto(ChallengeParticipation challengeParticipation) {
 
         this.userId = challengeParticipation.getUser()
-                                            .getId();
+                                            .getUserSeq();
         this.challengeId = challengeParticipation.getChallenge()
                                                  .getId();
 

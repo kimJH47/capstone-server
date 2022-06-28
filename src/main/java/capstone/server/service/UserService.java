@@ -1,8 +1,6 @@
 package capstone.server.service;
 
 import capstone.server.domain.User;
-import capstone.server.domain.UserRole;
-import capstone.server.dto.UserSaveRequestDto;
 import capstone.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,18 +20,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
-
-    @Transactional
-    public Long save(UserSaveRequestDto requestDto) {
-        //파라미터를 dto 쓸지 유저를 쓸지 고민
-        User user = User.builder()
-                        .email(requestDto.getEmail())
-                        .name(requestDto.getNickName())
-                        .userRole(UserRole.GUEST)
-                        .build();
-
-        return userRepository.save(user).getId();
-
-
+    public User getUser(String userId) {
+        return userRepository.findByUserId(userId)
+                             .orElseThrow(() -> new IllegalArgumentException("테이블에 유저가 없습니다"));
     }
 }
+
+
+
