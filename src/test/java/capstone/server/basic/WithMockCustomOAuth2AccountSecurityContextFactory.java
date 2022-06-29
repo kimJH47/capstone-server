@@ -1,2 +1,5 @@
-package capstone.server.basic;public class WithMockCustomOAuth2AccountSecurityContextFactory {
+package capstone.server.basic;
+
+public class WithMockCustomOAuth2AccountSecurityContextFactory {
+
 }
