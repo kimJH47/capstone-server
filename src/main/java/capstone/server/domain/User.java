@@ -58,9 +58,7 @@ public class User extends BaseTimeEntity{
     @OneToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
-
     @Column
-    private String name;
 
     public void changeProfile(Profile profile) {
         this.profile = profile;

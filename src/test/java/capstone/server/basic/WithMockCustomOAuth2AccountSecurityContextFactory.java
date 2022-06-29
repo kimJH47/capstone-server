@@ -41,5 +41,6 @@ public class WithMockCustomOAuth2AccountSecurityContextFactory implements WithSe
         context.setAuthentication(token);
         return context;
     }
-    }
+
+
 }
