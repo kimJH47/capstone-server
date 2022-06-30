@@ -37,6 +37,7 @@ public class BucketResponseDto {
 
     public static BucketResponseDto create(Bucket bucket) {
         List<SubBucket> subBucketList = bucket.getSubBucketList();
+        //세부목표 dto 변환
         List<SubBucketResponseDto> dtoList = subBucketList.stream()
                                                           .map(subBucket -> SubBucketResponseDto.builder()
                                                                                                 .content(subBucket.getContent())
@@ -45,6 +46,7 @@ public class BucketResponseDto {
                                                                                                 .modifiedTime(subBucket.getModifiedTime())
                                                                                                 .build())
                                                           .collect(Collectors.toList());
+
         return BucketResponseDto.builder()
                                 .content(bucket.getContent())
                                 .bucketPrivacyStatus(bucket.getBucketPrivacyStatus())
@@ -53,7 +55,6 @@ public class BucketResponseDto {
                                 .uploadTime(bucket.getUploadTime())
                                 .subBucketList(dtoList)
                                 .build();
-
     }
 
     public void changeSubBucketList(List<SubBucketResponseDto> list) {

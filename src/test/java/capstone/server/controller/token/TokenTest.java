@@ -58,8 +58,6 @@ public class TokenTest {
         //given
         //when
         //then
-
-        System.out.println("디버깅");
         mvc.perform(get("/api/buckets/user/1"))
                 .andExpect(status().isOk())
            .andDo(print());

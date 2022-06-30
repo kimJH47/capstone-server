@@ -7,7 +7,6 @@ import capstone.server.oauth.entity.ProviderType;
 import capstone.server.oauth.entity.RoleType;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,10 +20,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 
@@ -41,22 +44,7 @@ class BucketServiceTest {
     private BucketRepository bucketRepository;
 
     @BeforeEach
-    public void setUp() {
-
-//        Stream.of(1, 2, 3, 4, 5)
-//              .map(integer -> User.builder()
-//                                  .email("email@naver.com")
-//                                  .username("test" + integer)
-//                                  .roleType(RoleType.USER)
-//                                  .providerType(ProviderType.KAKAO)
-//                                  .profileImageUrl("/test/image")
-//                                  .emailVerifiedYn("Y")
-//                                  .password("testPass")
-//                                  .userId(String.valueOf(integer))
-//                                  .build())
-//              .map(user -> userRepository.save(user))
-//              .collect(Collectors.toList());
-
+    public void init() {
         User user = User.builder()
                         .email("email@naver.com")
                         .username("testname")
@@ -75,79 +63,115 @@ class BucketServiceTest {
 
         //given
         //초기저장 시에는 SubBucketDto 에 버킷ID를 보내지 않는다.
-        List<SubBucketSaveRequestDto> list =new ArrayList<>();
-        for(int i = 0;i<5;i++) {
-            list.add(SubBucketSaveRequestDto.builder()
-                                            .content("세부목표1")
-                                            .subBucketStatus(SubBucketStatus.ONGOING)
-                                            .build());
-        }
-        BucketSaveRequestDto dto = BucketSaveRequestDto.builder()
-                                                       .userId(1L)
-                                                       .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
-                                                       .content("버킷내용")
-                                                       .subBucketSaveRequestDtoList(list)
-                                                       .bucketStatus(BucketStatus.ONGOING)
-                                                       .build();
+        BucketSaveRequestDto dto = getBucketSaveRequestDto("버킷내용");
         User user = userRepository.findById(1L)
                                   .orElseThrow(() -> new IllegalArgumentException("Mock 유저 존재하지않음"));
+
         Bucket bucket = dto.toEntity();
         dto.getSubBucketSaveRequestDtoList()
            .stream()
            .map(SubBucketSaveRequestDto::toEntity)
            .forEach(bucket::addSubBucket);
+
         bucket.changeUser(user);
 
+
+        given(bucketRepository.save(any())).willReturn(bucket);
+        given(bucketRepository.findById(anyLong())).willReturn(Optional.of(bucket)); //검증을 위한 버킷 조회시 행위 지정
+
         //when
-        when(bucketRepository.save(any(Bucket.class))).thenReturn(bucket);
-        when(bucketRepository.findById(anyLong())).thenReturn(Optional.of(bucket));
         bucketService.saveBucket(dto);
         //then
         Bucket findBucket = bucketRepository.findById(1L)
                                             .orElseThrow(() -> new IllegalArgumentException("Mock Bucket 이 존재하지 않음"));
-        verify(bucketRepository).save(bucket);
+        then(bucketRepository).should(times(1))
+                              .save(any(Bucket.class));
         //버킷 저장 검증
-        Assertions.assertThat(findBucket)
+        assertThat(findBucket)
                   .isEqualTo(bucket);
         List<SubBucket> subBucketList = bucket.getSubBucketList();
         //세부목표 저장 검증
-        Assertions.assertThat(subBucketList.size())
+        assertThat(subBucketList.size())
                   .isEqualTo(5);
     }
+
+
+
     @Test
-    @DisplayName("버킷아이디 하나를 보내면 버킷조회가 완료되어야함")
-    public void 버킷조회() throws Exception {
+    @DisplayName("버킷아이디 하나를 보내면 버킷단건조회가 완료되어야함")
+    public void 버킷단건조회() throws Exception {
         //given
+        BucketSaveRequestDto saveDto = getBucketSaveRequestDto("버킷내용");
+        User user = userRepository.findById(1L)
+                                  .orElseThrow(() -> new IllegalArgumentException("Mock 유저 존재하지않음"));
+
+        Bucket bucket = saveDto.toEntity();
+        saveDto.getSubBucketSaveRequestDtoList()
+           .stream()
+           .map(SubBucketSaveRequestDto::toEntity)
+           .forEach(bucket::addSubBucket);
+        bucket.changeUser(user);
+
+        given(bucketRepository.findById(anyLong())).willReturn(Optional.of(bucket)); //검증을 위한 버킷 조회시 행위 지정
+
         //when
+        BucketResponseDto findDto = bucketService.findOne(1L);
+
         //then
+        then(bucketRepository).should(times(1))
+                              .findById(1L);
+
+        assertThat(findDto.getContent()).isEqualTo(saveDto.getContent());
+        assertThat(findDto.getSubBucketList().size()).isEqualTo(saveDto.getSubBucketSaveRequestDtoList().size());
+
+
     }
 
     @Test
+    @DisplayName("유저 아이디를 받으면 유저가 가지고있는 버킷이 전부 조회되어야한다")
     public void 버킷전체조회_테스트() throws Exception{
         //given
+        BucketSaveRequestDto saveDto = getBucketSaveRequestDto("버킷내용1");
         User user = userRepository.findById(1L)
-                                  .get();
+                                  .orElseThrow(() -> new IllegalArgumentException("Mock 유저 존재하지않음"));
 
-        for (int i = 0; i < 10; i++) {
-            Bucket bucket1 = Bucket.builder()
-                                   .content("버킷"+i)
-                                   .bucketStatus(BucketStatus.ONGOING)
-                                   .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
-                                   .user(user)
-                                   .uploadTime(LocalDateTime.now())
-                                   .modifiedTime(LocalDateTime.now())
-                                   .build();
-            bucketRepository.save(bucket1);
-        }
+        Bucket bucket1 = saveDto.toEntity();
+        saveDto.getSubBucketSaveRequestDtoList()
+               .stream()
+               .map(SubBucketSaveRequestDto::toEntity)
+               .forEach(bucket1::addSubBucket);
+        bucket1.changeUser(user);
+
+        BucketSaveRequestDto saveDto2 = getBucketSaveRequestDto("버킷내용2");
+        Bucket bucket2 = saveDto2.toEntity();
+        saveDto2.getSubBucketSaveRequestDtoList()
+               .stream()
+               .map(SubBucketSaveRequestDto::toEntity)
+               .forEach(bucket2::addSubBucket);
+        bucket2.changeUser(user);
+
+        List<Bucket> buckets = new ArrayList<>();
+        buckets.add(bucket1);
+        buckets.add(bucket2);
+
+        given(bucketRepository.findAllByUser(any(User.class))).willReturn(buckets); //검증을 위한 버킷 조회시 행위 지정
+
         //when
-        List<BucketResponseDto> bucketsByUserId = bucketService.findBucketsByUserId(1L);
+        List<BucketResponseDto> findBuckets = bucketService.findBucketsByUserId(1L);
         //then
-        Assertions.assertThat(bucketsByUserId.size())
-                  .isEqualTo(10);
+        then(bucketRepository).should(times(1))
+                              .findAllByUser(any(User.class));
+        assertThat(findBuckets.size()).isEqualTo(2);
+
+        assertThat(findBuckets.stream()
+                              .map(BucketResponseDto::getContent)
+                              .collect(Collectors.toList())).containsExactlyInAnyOrder("버킷내용1", "버킷내용2");
+
     }
 
 
     @Test
+    @DisplayName("재작성")
     public void 컨탠츠업데이트_테스트() throws Exception{
         //given
         User user = userRepository.findById(1L)
@@ -200,6 +224,25 @@ class BucketServiceTest {
                         .stream()
                         .allMatch(bucketStatus -> bucketStatus.equals(BucketStatus.COMPLETED));
 
+    }
+
+    //테스트용 dto
+    private BucketSaveRequestDto getBucketSaveRequestDto(String content) {
+        List<SubBucketSaveRequestDto> list =new ArrayList<>();
+        for(int i = 0;i<5;i++) {
+            list.add(SubBucketSaveRequestDto.builder()
+                                            .content("세부목표1")
+                                            .subBucketStatus(SubBucketStatus.ONGOING)
+                                            .build());
+        }
+        BucketSaveRequestDto dto = BucketSaveRequestDto.builder()
+                                                       .userId(1L)
+                                                       .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                                       .content(content)
+                                                       .subBucketSaveRequestDtoList(list)
+                                                       .bucketStatus(BucketStatus.ONGOING)
+                                                       .build();
+        return dto;
     }
 
 }

@@ -5,7 +5,6 @@ import capstone.server.dto.bucket.*;
 import capstone.server.service.BucketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +43,8 @@ public class BucketController {
 //    }
 
     //버킷저장 + 이미지 저장 api
-    @PostMapping(value = "/buckets",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> save(@RequestPart(value = "request") @Valid BucketSaveRequestDto requestDto,
-                                  @RequestPart(value = "images") List<MultipartFile> multipartFiles,
+    @PostMapping("/buckets")
+    public ResponseEntity<?> save(@RequestBody @Valid BucketSaveRequestDto requestDto,
                                   BindingResult bindingResult) throws IOException {
 
         if (bindingResult.hasErrors()) {
@@ -55,13 +53,11 @@ public class BucketController {
                                                  .getDefaultMessage();
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
-        bucketService.saveBucket(requestDto);
-        if(!multipartFiles.isEmpty()){
-            //List<String> urls = imageStorageService.BucketImageUploadToS3(saveBucketId,multipartFiles);
-            return ResponseEntity.ok().body("urls");
-        }
-        return ResponseEntity.ok().body("버킷생성완료");
-
+        System.out.println("requestDto.getContent() = " + requestDto.getContent());
+        Long saveId = bucketService.saveBucket(requestDto);
+        
+        return ResponseEntity.ok()
+                             .body(saveId);
     }
     //이미지 저장 api
     @PostMapping("/buckets/{id}/images")
@@ -75,8 +71,8 @@ public class BucketController {
     @GetMapping("/buckets/{id}")
     public ResponseEntity<?> findOne(@PathVariable Long id) {
 
-        BucketResponseDto findBucket = bucketService.findById(id);
-
+        BucketResponseDto findBucket = bucketService.findOne(id);
+        System.out.println("findBucket = " + findBucket);
         return ResponseEntity.ok()
                              .body(findBucket);
     }

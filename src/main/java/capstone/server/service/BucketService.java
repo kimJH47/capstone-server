@@ -30,38 +30,27 @@ public class BucketService {
 
     @Transactional
     public Long saveBucket(BucketSaveRequestDto requestDto) {
-
+        System.out.println("==============");
         User findUser = userRepository.findById(requestDto.getUserId())
                                       .orElseThrow(() -> new IllegalArgumentException("테이블에 유저데이터가 없습니다"));
+        System.out.println("findUser = " + findUser.getUsername());
         Bucket bucket = requestDto.toEntity();
         bucket.changeUser(findUser);
-
         requestDto.getSubBucketSaveRequestDtoList()
                   .stream()
                   .map(SubBucketSaveRequestDto::toEntity)
                   .forEach(bucket::addSubBucket);
+
         Bucket saveBucket = bucketRepository.save(bucket);
         return saveBucket.getId();
     }
     //버킷리스트 중 하나를 조회할때 사용되는 로직(세부목표와 함깨 반환됨)
     @Transactional(readOnly = true)
-    public BucketResponseDto findById(Long id) {
+    public BucketResponseDto findOne(Long id) {
+
         Bucket findBucket = bucketRepository.findById(id)
                                             .orElseThrow(() -> new IllegalArgumentException("테이블에 버킷이 없습니다"));
-        List<SubBucketResponseDto> subBucketList = findBucket.getSubBucketList()
-                                                             .stream()
-                                                             .map(subBucket -> SubBucketResponseDto.builder()
-                                                                                                   .content(subBucket.getContent())
-                                                                                                   .subBucketStatus(subBucket.getSubBucketStatus())
-                                                                                                   .uploadTime(subBucket.getUploadTime())
-                                                                                                   .modifiedTime(subBucket.getModifiedTime())
-                                                                                                   .build())
-                                                             .collect(Collectors.toList());
-        BucketResponseDto bucketResponseDto = BucketResponseDto.create(findBucket);
-        bucketResponseDto.changeSubBucketList(subBucketList);
-
-        return bucketResponseDto;
-
+        return BucketResponseDto.create(findBucket);
     }
 
     /**
