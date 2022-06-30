@@ -14,9 +14,11 @@ public class BucketRepositoryImpl implements BucketRepositoryCustom {
 
 
     private final JPAQueryFactory jpaQueryFactory;
-
     @Override
     public List<Optional<Bucket>> searchBucket(BucketSearch bucketSearch) {
         return null;
     }
+
+
+
 }

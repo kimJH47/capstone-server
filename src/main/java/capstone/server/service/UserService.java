@@ -20,6 +20,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public User getUser(String userId) {
         return userRepository.findByUserId(userId)
                              .orElseThrow(() -> new IllegalArgumentException("테이블에 유저가 없습니다"));

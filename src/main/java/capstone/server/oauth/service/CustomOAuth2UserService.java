@@ -93,7 +93,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //        );
         User user = User.builder()
                         .userId(userInfo.getId())
-                        .name(userInfo.getName())
+                        .username(userInfo.getName())
                         .email(userInfo.getEmail())
                         .emailVerifiedYn("Y")
                         .profileImageUrl(userInfo.getImageUrl())

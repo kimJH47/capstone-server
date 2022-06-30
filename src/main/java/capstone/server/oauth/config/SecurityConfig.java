@@ -32,6 +32,7 @@ import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Configuration
+//@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsProperties corsProperties;
@@ -41,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
+
 
 
     /*
@@ -151,7 +153,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
-
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
         corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
@@ -162,5 +163,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfigSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigSource;
     }
+
 
 }

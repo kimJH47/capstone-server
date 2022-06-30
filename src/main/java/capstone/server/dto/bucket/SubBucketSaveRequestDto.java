@@ -7,17 +7,18 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 public class SubBucketSaveRequestDto {
 
-    @NotNull
     private Long bucketId;
     private SubBucketStatus subBucketStatus;
     @NotNull

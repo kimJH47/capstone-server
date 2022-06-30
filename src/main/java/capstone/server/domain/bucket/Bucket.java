@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,12 +35,18 @@ public class Bucket {
     private LocalDateTime modifiedTime;
 
 
-    //단방향 , setter 사용x
+    //조회편의성을 위해 양방향 구현
+    @OneToMany(mappedBy = "id",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<SubBucket> subBucketList = new ArrayList<>();
 
     //setter
     public void changeUser(User user) {
         this.user = user;
 
+    }
+    public void addSubBucket(SubBucket subBucket) {
+        subBucketList.add(subBucket);
+        subBucket.changeBucket(this);
     }
 
     public void changeStatus(BucketStatus bucketStatus) {

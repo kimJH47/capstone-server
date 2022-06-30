@@ -46,7 +46,7 @@ class ChallengeServiceTest {
                                    .map(integer -> User.builder()
 
                                                        .email("email@naver.com")
-                                                       .name("test" + integer)
+                                                       .username("test" + integer)
                                                        .build())
                                    .map(user -> userRepository.save(user))
                                    .collect(Collectors.toList());
@@ -279,7 +279,7 @@ class ChallengeServiceTest {
     }
     private void createUser(String test) {
         userRepository.save(User.builder()
-                                .name(test)
+                                .username(test)
                                 .email("mail")
                                 .build());
     }

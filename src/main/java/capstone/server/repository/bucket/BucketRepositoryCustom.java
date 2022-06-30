@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface BucketRepositoryCustom {
 
     List<Optional<Bucket>> searchBucket(BucketSearch bucketSearch);
+
 }

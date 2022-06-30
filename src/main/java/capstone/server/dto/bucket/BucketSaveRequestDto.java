@@ -5,16 +5,18 @@ import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class BucketSaveRequestDto {
 
@@ -30,6 +32,7 @@ public class BucketSaveRequestDto {
     private LocalDateTime uploadTime;
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime modifiedTime;
+    private List<SubBucketSaveRequestDto> subBucketSaveRequestDtoList;
 
     public Bucket toEntity() {
         return Bucket.builder()
@@ -38,6 +41,7 @@ public class BucketSaveRequestDto {
                      .bucketPrivacyStatus(this.getBucketPrivacyStatus())
                      .uploadTime(this.getUploadTime())
                      .modifiedTime(this.getModifiedTime())
+                     .subBucketList(new ArrayList<>())
                      .build();
     }
 }
