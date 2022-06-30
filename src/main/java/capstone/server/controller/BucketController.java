@@ -45,7 +45,9 @@ public class BucketController {
 
     //버킷저장 + 이미지 저장 api
     @PostMapping(value = "/buckets",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> save(@RequestPart(value = "request") @Valid BucketSaveRequestDto requestDto, @RequestPart(value = "images") List<MultipartFile> multipartFiles, BindingResult bindingResult) throws IOException {
+    public ResponseEntity<?> save(@RequestPart(value = "request") @Valid BucketSaveRequestDto requestDto,
+                                  @RequestPart(value = "images") List<MultipartFile> multipartFiles,
+                                  BindingResult bindingResult) throws IOException {
 
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
@@ -53,7 +55,7 @@ public class BucketController {
                                                  .getDefaultMessage();
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
-        Long saveBucketId = bucketService.saveBucket(requestDto);
+        bucketService.saveBucket(requestDto);
         if(!multipartFiles.isEmpty()){
             //List<String> urls = imageStorageService.BucketImageUploadToS3(saveBucketId,multipartFiles);
             return ResponseEntity.ok().body("urls");

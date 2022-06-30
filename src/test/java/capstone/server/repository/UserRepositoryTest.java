@@ -19,7 +19,7 @@ class UserRepositoryTest {
 
         //given
         User save = userRepository.save(User.builder()
-                                            .name("Test")
+                                            .username("Test")
                                             .email("emailTest")
                                             .build());
         //when
@@ -28,7 +28,7 @@ class UserRepositoryTest {
 
         User byId = userRepository.getById(id);
 
-        System.out.println("byId = " + byId.getName());
+        System.out.println("byId = " + byId.getUsername());
         Assertions.assertThat(userRepository.getById(id))
                   .isSameAs(save);
 

@@ -65,7 +65,7 @@ public class User extends BaseTimeEntity{
     }
 
     public void changeName(String name) {
-        this.name = name;
+        this.username = name;
     }
 
     public void changeProfileImageUrl(String profileImageUrl) {

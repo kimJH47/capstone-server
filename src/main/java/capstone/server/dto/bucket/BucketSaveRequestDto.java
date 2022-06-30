@@ -12,6 +12,8 @@ import lombok.Getter;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -31,6 +33,8 @@ public class BucketSaveRequestDto {
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime modifiedTime;
 
+    private List<SubBucketSaveRequestDto> subBucketSaveRequestDtoList;
+
     public Bucket toEntity() {
         return Bucket.builder()
                      .content(this.getContent())
@@ -38,6 +42,7 @@ public class BucketSaveRequestDto {
                      .bucketPrivacyStatus(this.getBucketPrivacyStatus())
                      .uploadTime(this.getUploadTime())
                      .modifiedTime(this.getModifiedTime())
+                     .subBucketList(new ArrayList<>())
                      .build();
     }
 }

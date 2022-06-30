@@ -22,6 +22,10 @@ public class SubBucketService {
     private final BucketRepository bucketRepository;
     private final SubBucketRepository subBucketRepository;
 
+
+    /**
+     *  : 버킷이 존재하는 상태에서 세부목표를 추가로 생성할때 사용되는 로직
+     */
     @Transactional
     public void saveSubBucket(SubBucketSaveRequestDto requestDto) {
         Long bucketId = requestDto.getBucketId();

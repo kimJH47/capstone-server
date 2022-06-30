@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @Getter
 public class SubBucketSaveRequestDto {
 
-    @NotNull
     private Long bucketId;
     private SubBucketStatus subBucketStatus;
     @NotNull
