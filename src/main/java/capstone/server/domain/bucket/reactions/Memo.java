@@ -1,22 +1,19 @@
-package capstone.server.domain.sns;
+package capstone.server.domain.bucket.reaction;
 
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
-public class Comment {
-
+public class Memo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @Column(name = "memo_id")
     private Long id;
     private String content;
     private LocalDateTime uploadTime;
@@ -27,10 +24,5 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-
-
-
-
 }
 

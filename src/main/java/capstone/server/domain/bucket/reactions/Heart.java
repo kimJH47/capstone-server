@@ -1,4 +1,4 @@
-package capstone.server.domain.sns;
+package capstone.server.domain.bucket.reactions;
 
 
 import capstone.server.domain.User;
@@ -11,10 +11,9 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "likes")
-public class Like {
+public class Hearth {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_id")
     private Long id;
     private LocalDateTime uploadTime;
