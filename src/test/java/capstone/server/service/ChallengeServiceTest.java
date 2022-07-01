@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-class ChallengeServiceTest {
+class  ChallengeServiceTest {
 
 
     @InjectMocks
@@ -195,9 +195,9 @@ class ChallengeServiceTest {
     @DisplayName("챌린지 join 시 남는자리가 없으면 예외가 발생함")
     public void 챌린지_풀방_예외() throws Exception {
         //given
-
+        getUser();
         //when
-        
+
         //then
 
 
@@ -206,6 +206,7 @@ class ChallengeServiceTest {
     @DisplayName("참가요청된 유저의 joinStatus 가 wait 에서 succeeded 로 변경되어야함")
     public void 챌린지참가_상태변경_테스트() throws Exception{
         //given
+        getUser();
         //when
         //then
     }

@@ -35,13 +35,13 @@ public class ChallengeService {
         challenge.changeUser(findUser);
         List<String> tagList = requestDto.getTagList();
 
-        if (tagList.size() != 0) {
+        if (!tagList.isEmpty()) {
             List<ChallengeTag> collect = tagList.stream()
                                                 .map(s -> new ChallengeTag(s))
                                                 .collect(Collectors.toList());
             challenge.updateTagList(collect);
         }
-
+        List<SubChallengeSaveRequestDto> subChallengeSaveRequestDtoList = requestDto.getSubChallengeSaveRequestDtoList();
 
 
         //챌린지참가 정보에 바로 추가하기
@@ -153,10 +153,14 @@ public class ChallengeService {
         }
     }
 
+    /**
+     *
+     * @param id 챌린지 Id
+     * @return 챌린지 단건조회 dto
+     */
     public ChallengeResponseDto findById(Long id) {
         Challenge challenge = challengeRepository.findById(id)
                                                  .orElseThrow(() -> new IllegalArgumentException("테이블에 해당 챌린지가 존재하지 않습니다"));
-
         return new ChallengeResponseDto(challenge);
     }
 }

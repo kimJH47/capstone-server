@@ -2,6 +2,7 @@ package capstone.server.domain.challenge;
 
 
 import capstone.server.domain.User;
+import capstone.server.domain.bucket.SubBucketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,4 +29,11 @@ public class UserSubChallengeInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
+
+    @Enumerated(EnumType.STRING)
+    private SubBucketStatus subBucketStatus;
+
+    public void changeStatus(SubBucketStatus subBucketStatus) {
+        this.subBucketStatus = subBucketStatus;
+    }
 }

@@ -2,6 +2,7 @@ package capstone.server.dto.challenge;
 
 
 import capstone.server.domain.bucket.SubBucketStatus;
+import capstone.server.domain.challenge.SubChallenge;
 import lombok.*;
 
 @AllArgsConstructor
@@ -14,4 +15,8 @@ public class SubChallengeSaveRequestDto {
     private Long challengeId;
     private SubBucketStatus subBucketStatus;
     private String content;
+
+    public SubChallenge toEntity() {
+        return null;
+    }
 }
