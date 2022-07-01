@@ -3,19 +3,18 @@ package capstone.server.dto.challenge;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
 import capstone.server.domain.challenge.Challenge;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
 public class ChallengeResponseDto {
 
-
+    private Long id;
     private String title;
     private String content;
     private BucketPrivacyStatus challengePrivacyStatus;
@@ -27,6 +26,7 @@ public class ChallengeResponseDto {
     private List<String> tagList;
 
     public ChallengeResponseDto(Challenge challenge) {
+        this.id = getId();
         this.title = challenge.getTitle();
         this.content = challenge.getContent();
         this.challengePrivacyStatus = challenge.getChallengePrivacyStatus();
@@ -35,9 +35,5 @@ public class ChallengeResponseDto {
         this.uploadTime = challenge.getUploadTime();
         this.modifiedTime = challenge.getModifiedTime();
 
-    }
-
-    public void updateTagList(List<String> tagList) {
-        this.tagList = tagList;
     }
 }

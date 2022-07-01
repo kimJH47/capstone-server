@@ -66,8 +66,6 @@ public class SubBucketApiTest {
         SubBucketSaveRequestDto request = SubBucketSaveRequestDto.builder()
                                                                  .bucketId(1L)
                                                                  .subBucketStatus(SubBucketStatus.ONGOING)
-                                                                 .modifiedTime(LocalDateTime.now())
-                                                                 .uploadTime(LocalDateTime.now())
                                                                  .content("세부목표 내용입네다")
                                                                  .build();
 

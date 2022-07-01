@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 public class SubBucketResponseDto {
 
-
+    private Long id;
     private String content;
     private SubBucketStatus subBucketStatus;
     private LocalDateTime uploadTime;

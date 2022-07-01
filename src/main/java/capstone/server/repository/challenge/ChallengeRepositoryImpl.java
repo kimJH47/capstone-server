@@ -40,13 +40,14 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
                               .on(challengeTag.content.in(challengeSearch.getTagList()))
                               .where(challenge.challengePrivacyStatus.eq(BucketPrivacyStatus.PUBLIC),
                                       eqTitle(challengeSearch.getTitle()),
-                                      eqStatus(challengeSearch.getChallengeStatus()))
+                                      eqStatus(challengeSearch.getChallengeStatus()),
+                                      eqMaxJoinNum(challengeSearch.getMaxJoinNum()))
                               .distinct()
                               .fetch();
     }
 
     public BooleanExpression eqTitle(String title) {
-        return title != null ? challenge.title.eq(title) : null;
+        return title != null ? challenge.title.like(title) : null;
     }
 
     public BooleanExpression eqStatus(BucketStatus challengeStatus) {

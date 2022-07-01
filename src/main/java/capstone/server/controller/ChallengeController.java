@@ -21,7 +21,7 @@ public class ChallengeController {
 
 
     //챌린지 생성
-    @PostMapping("/challenge")
+    @PostMapping("/challenges")
     public ResponseEntity<?> createChallenge(@RequestBody @Valid ChallengeSaveRequestDto requestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
@@ -30,13 +30,13 @@ public class ChallengeController {
 
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
-        challengeService.save(requestDto);
+        ChallengeParticipationResponseDto save = challengeService.save(requestDto);
         return ResponseEntity.ok()
-                             .body("챌린지 생성이 완료되었습니다");
+                             .body(save);
     }
 
     //챌린지 참가 요청
-    @PostMapping("/challenge/join")
+    @PostMapping("/challenges/join")
     public ResponseEntity<?> challengeJoinRequest(@RequestBody @Valid ChallengeJoinRequestDto requestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
@@ -44,9 +44,10 @@ public class ChallengeController {
                                                  .getDefaultMessage();
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
-        challengeService.join(requestDto);
+        ChallengeParticipationResponseDto responseDto = challengeService.join(requestDto);
+        System.out.println("responseDto = " + responseDto.getUserName());
         return ResponseEntity.ok()
-                             .body("챌린지 참가요청이 완료되었습니다");
+                             .body(responseDto);
 
     }
 
@@ -66,15 +67,14 @@ public class ChallengeController {
      * 추가할것 :
      * -동적쿼리이용 : 하는 참가상태를 바디로 받아서 api 하나로 처리하기.
      */
-    @GetMapping("/challenge/{id}/users")
-    public ResponseEntity<?> findChallengeUsersById(@PathVariable Long id) {
-        List<ChallengeParticipationResponseDto> responseDtos = challengeService.findUsers(id);
-
+    @GetMapping("/challenges/{id}/users")
+    public ResponseEntity<?> findChallengeParticipation(@PathVariable Long id) {
+        List<ChallengeParticipationResponseDto> responseDtos = challengeService.findParticipationByChallengeId(id);
         return ResponseEntity.ok()
                              .body(responseDtos);
     }
 
-    @PostMapping("/challenge/join-status")
+    @PostMapping("/challenges/join-status")
     public ResponseEntity<?> updateJoinStatus(@RequestBody @Valid ChallengeJoinStatusUpdateDto updateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
@@ -82,13 +82,13 @@ public class ChallengeController {
                                                  .getDefaultMessage();
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
-        challengeService.updateJoinStatus(updateDto);
+        ChallengeParticipationResponseDto responseDto = challengeService.updateJoinStatus(updateDto);
         return ResponseEntity.ok()
-                             .body("참가정보가 업데이트 되었습니다");
+                             .body(responseDto);
     }
 
     //챌린지 검색
-    @PostMapping("/challenge/search")
+    @PostMapping("/challenges/search")
     public ResponseEntity<?> searchChallenge(@RequestBody @Valid ChallengeSearch challengeSearch,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
@@ -102,7 +102,17 @@ public class ChallengeController {
     }
     //유저 챌린지 참가 수락(또는 거절)
     //챌린지 참가 여부 조회
-    //챌린지 참가 유저 조회
+
+    //챌린지 단건조회
+    @GetMapping("/challenges/{id}")
+    public ResponseEntity<?> findOne(@PathVariable("id") Long id) {
+
+        ChallengeResponseDto responseDto = challengeService.findById(id);
+
+        return ResponseEntity.ok()
+                             .body(responseDto);
+    }
+
 
 
 }

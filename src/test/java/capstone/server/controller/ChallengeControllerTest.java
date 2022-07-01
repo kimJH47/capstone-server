@@ -75,8 +75,6 @@ class ChallengeControllerTest {
         ChallengeSaveRequestDto requestDto = ChallengeSaveRequestDto.builder()
                                                                     .content("챌린지 1")
                                                                     .maxJoinNum(2)
-                                                                    .uploadTime(LocalDateTime.now())
-                                                                    .modifiedTime(LocalDateTime.now())
                                                                     .title("챌린지 제목")
                                                                     .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                                     .userId(1L)
@@ -183,7 +181,6 @@ class ChallengeControllerTest {
         //when
         //then
         ChallengeJoinStatusUpdateDto build = ChallengeJoinStatusUpdateDto.builder()
-                                                                         .updateTime(LocalDateTime.now())
                                                                          .challengeParticipationId(1L)
                                                                          .userId(2L)
                                                                          .JoinStatus(JoinStatus.SUCCEEDED)
@@ -243,8 +240,6 @@ class ChallengeControllerTest {
         challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 1")
                                                      .maxJoinNum(5)
-                                                     .uploadTime(LocalDateTime.now())
-                                                     .modifiedTime(LocalDateTime.now())
                                                      .title("챌린지 제목")
                                                      .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                      .userId(1L)
@@ -255,8 +250,6 @@ class ChallengeControllerTest {
         challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 2")
                                                      .maxJoinNum(5)
-                                                     .uploadTime(LocalDateTime.now())
-                                                     .modifiedTime(LocalDateTime.now())
                                                      .title("여행")
                                                      .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                      .userId(1L)
@@ -266,8 +259,6 @@ class ChallengeControllerTest {
         challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 1")
                                                      .maxJoinNum(5)
-                                                     .uploadTime(LocalDateTime.now())
-                                                     .modifiedTime(LocalDateTime.now())
                                                      .title("낚시")
                                                      .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                      .userId(1L)
@@ -275,5 +266,6 @@ class ChallengeControllerTest {
                                                      .build());
 
     }
+
 
 }

@@ -41,6 +41,10 @@ public class ChallengeParticipation {
     private JoinStatus joinStatus;
     //버킷완료 여부 객체 뭘쓸까...,
 
+
+    public void changeRoleType(ChallengeRoleType challengeRoleType) {
+        this.challengeRoleType = challengeRoleType;
+    }
     public void changeJoinStatus(JoinStatus joinStatus) {
         this.joinStatus = joinStatus;
     }

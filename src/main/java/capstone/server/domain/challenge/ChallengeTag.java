@@ -2,6 +2,7 @@ package capstone.server.domain.challenge;
 
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ChallengeTag {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
