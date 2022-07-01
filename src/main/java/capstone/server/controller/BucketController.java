@@ -81,31 +81,30 @@ public class BucketController {
     public ResponseEntity<?> findBucketsByUserId(@PathVariable("id") Long id) {
         return ResponseEntity.ok()
                              .body(bucketService.findBucketsByUserId(id));
-
     }
-
-    @PutMapping("/buckets/{id}/contents")
-    public ResponseEntity<?> updateBucketContents(@PathVariable("id") Long id, @Valid @RequestBody BucketContentUpdateDto updateDto, BindingResult bindingResult) {
+    @PutMapping("/buckets/contents")
+    public ResponseEntity<?> updateBucketContents(@Valid @RequestBody BucketContentUpdateDto updateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
                                                  .get(0)
                                                  .getDefaultMessage();
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
-        bucketService.updateBucketContent(updateDto, id);
+        bucketService.updateBucketContent(updateDto);
+
         return ResponseEntity.ok()
                              .body("버킷 내용이 업데이트 되었습니다");
-    }
 
-    @PutMapping("/buckets/{id}/status")
-    public ResponseEntity<?> updateBucketStatus(@PathVariable("id") Long id, @Valid @RequestBody BucketStatusUpdateDto updateDto, BindingResult bindingResult) {
+    }
+    @PutMapping("/buckets/status")
+    public ResponseEntity<?> updateBucketStatus( @Valid @RequestBody BucketStatusUpdateDto updateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
                                                  .get(0)
                                                  .getDefaultMessage();
             return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
         }
-        bucketService.updateBucketStatus(updateDto, id);
+        bucketService.updateBucketStatus(updateDto);
         return ResponseEntity.ok()
                              .body("버킷 내용이 업데이트 되었습니다");
     }

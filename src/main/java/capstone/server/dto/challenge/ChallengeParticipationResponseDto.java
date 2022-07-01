@@ -9,18 +9,18 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ChallengeParticipationResponseDto {
-    @NotNull
-    private Long userId;
-    @NotNull
+
     private Long challengeId;
+    private Long id;
     private String userName;
     private ChallengeRoleType challengeRoleType;
     private JoinStatus joinStatus;
@@ -29,17 +29,14 @@ public class ChallengeParticipationResponseDto {
 
     public ChallengeParticipationResponseDto(ChallengeParticipation challengeParticipation) {
 
-        this.userId = challengeParticipation.getUser()
-                                            .getUserSeq();
         this.challengeId = challengeParticipation.getChallenge()
                                                  .getId();
-
+        this.id = challengeParticipation.getId();
         this.userName = challengeParticipation.getUser()
                                               .getUsername();
-
         this.challengeRoleType = challengeParticipation.getChallengeRoleType();
         this.joinStatus = challengeParticipation.getJoinStatus();
-
+        this.requestTime = challengeParticipation.getRequestTime();
 
     }
 }

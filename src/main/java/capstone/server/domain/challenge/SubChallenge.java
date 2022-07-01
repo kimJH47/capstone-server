@@ -13,14 +13,12 @@ public class SubChallenge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sub_challenge_id")
     private Long id;
-
     private SubBucketStatus subBucketStatus;
-
     private String content;
-
     private LocalDateTime uploadTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
+
 }

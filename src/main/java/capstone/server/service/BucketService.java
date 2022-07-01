@@ -7,7 +7,6 @@ import capstone.server.dto.bucket.*;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketImageRepository;
 import capstone.server.repository.bucket.BucketRepository;
-import capstone.server.repository.bucket.SubBucketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +22,13 @@ public class BucketService {
 
     private final UserRepository userRepository;
 
-    private final SubBucketRepository subBucketRepository;
-
     private final BucketImageRepository bucketImageRepository;
 
 
     @Transactional
     public Long saveBucket(BucketSaveRequestDto requestDto) {
-        System.out.println("==============");
         User findUser = userRepository.findById(requestDto.getUserId())
                                       .orElseThrow(() -> new IllegalArgumentException("테이블에 유저데이터가 없습니다"));
-        System.out.println("findUser = " + findUser.getUsername());
         Bucket bucket = requestDto.toEntity();
         bucket.changeUser(findUser);
         requestDto.getSubBucketSaveRequestDtoList()
@@ -72,19 +67,20 @@ public class BucketService {
     }
 
     @Transactional
-    public void updateBucketContent(BucketContentUpdateDto bucketUpdateDto,Long bucketId) {
-        Bucket bucket = bucketRepository.findById(bucketId)
+    public Long updateBucketContent(BucketContentUpdateDto bucketUpdateDto) {
+
+        Bucket bucket = bucketRepository.findById(bucketUpdateDto.getBucketId())
                                         .orElseThrow(() -> new IllegalArgumentException("테이블에 버킷이 없습니다"));
         bucket.changeContent(bucketUpdateDto.getContent());
-        bucket.setModifiedTime(bucketUpdateDto.getUpdateTime());
+        return bucket.getId();
     }
 
     @Transactional
-    public void updateBucketStatus(BucketStatusUpdateDto bucketStatusUpdateDto, Long bucketId) {
-        Bucket bucket = bucketRepository.findById(bucketId)
+    public Long updateBucketStatus(BucketStatusUpdateDto bucketStatusUpdateDto) {
+        Bucket bucket = bucketRepository.findById(bucketStatusUpdateDto.getBucketId())
                                         .orElseThrow(() -> new IllegalArgumentException("테이블에 버킷이 없습니다"));
         bucket.changeStatus(bucketStatusUpdateDto.getStatus());
-        bucket.setModifiedTime(bucketStatusUpdateDto.getUpdateTime());
+        return bucket.getId();
 
     }
 

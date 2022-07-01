@@ -4,20 +4,16 @@ package capstone.server.dto.challenge;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
 import capstone.server.domain.challenge.Challenge;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
 public class ChallengeSaveRequestDto {
@@ -32,23 +28,17 @@ public class ChallengeSaveRequestDto {
     @Max(value = 10)
     private Integer maxJoinNum;
     private BucketPrivacyStatus challengePrivacyStatus;
-    @JsonSerialize(using = ToStringSerializer.class)
-    private LocalDateTime uploadTime;
-    @JsonSerialize(using = ToStringSerializer.class)
-    private LocalDateTime modifiedTime;
-
-    private List<String> tagList = new ArrayList<>();
+    private List<String> tagList;
+    private List<SubChallengeSaveRequestDto> subChallengeSaveRequestDtoList;
 
     public Challenge toEntity() {
         /**
          * 챌린지 생성 기본값
-         * - 챌린지 상태 : 진행중
+         * - 챌린지 상태 : BucketStatus.ONGOING
          */
         return Challenge.builder()
                         .title(this.getTitle())
                         .content(this.getContent())
-                        .uploadTime(this.getUploadTime())
-                        .modifiedTime(this.getUploadTime())
                         .maxJoinNum(this.getMaxJoinNum())
                         .challengeStatus(BucketStatus.ONGOING)
                         .challengePrivacyStatus(this.getChallengePrivacyStatus())

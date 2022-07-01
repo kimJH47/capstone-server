@@ -7,8 +7,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ChallengeRoleType {
-    ADMIN("ROLE_ADMIN","챌린지 관리자"),
-    MEMBER("ROLE_MEMBER","일반맴버");
+    ADMIN("ROLE_ADMIN", "챌린지 관리자"),
+    MEMBER("ROLE_MEMBER", "일반맴버"),
+
+    RESERVE("ROLE_RESERVE", "침가대기자"),
+    ;
 
     private final String key;
     private final String role;

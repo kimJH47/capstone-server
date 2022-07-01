@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,9 +31,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-@Transactional
 class BucketServiceTest {
-
     @InjectMocks
     private BucketService bucketService;
 
@@ -64,8 +61,7 @@ class BucketServiceTest {
         //given
         //초기저장 시에는 SubBucketDto 에 버킷ID를 보내지 않는다.
         BucketSaveRequestDto dto = getBucketSaveRequestDto("버킷내용");
-        User user = userRepository.findById(1L)
-                                  .orElseThrow(() -> new IllegalArgumentException("Mock 유저 존재하지않음"));
+        User user = getUser();
 
         Bucket bucket = dto.toEntity();
         dto.getSubBucketSaveRequestDtoList()
@@ -102,14 +98,13 @@ class BucketServiceTest {
     public void 버킷단건조회() throws Exception {
         //given
         BucketSaveRequestDto saveDto = getBucketSaveRequestDto("버킷내용");
-        User user = userRepository.findById(1L)
-                                  .orElseThrow(() -> new IllegalArgumentException("Mock 유저 존재하지않음"));
+        User user = getUser();
 
         Bucket bucket = saveDto.toEntity();
         saveDto.getSubBucketSaveRequestDtoList()
-           .stream()
-           .map(SubBucketSaveRequestDto::toEntity)
-           .forEach(bucket::addSubBucket);
+               .stream()
+               .map(SubBucketSaveRequestDto::toEntity)
+               .forEach(bucket::addSubBucket);
         bucket.changeUser(user);
 
         given(bucketRepository.findById(anyLong())).willReturn(Optional.of(bucket)); //검증을 위한 버킷 조회시 행위 지정
@@ -132,8 +127,7 @@ class BucketServiceTest {
     public void 버킷전체조회_테스트() throws Exception{
         //given
         BucketSaveRequestDto saveDto = getBucketSaveRequestDto("버킷내용1");
-        User user = userRepository.findById(1L)
-                                  .orElseThrow(() -> new IllegalArgumentException("Mock 유저 존재하지않음"));
+        User user = getUser();
 
         Bucket bucket1 = saveDto.toEntity();
         saveDto.getSubBucketSaveRequestDtoList()
@@ -143,6 +137,7 @@ class BucketServiceTest {
         bucket1.changeUser(user);
 
         BucketSaveRequestDto saveDto2 = getBucketSaveRequestDto("버킷내용2");
+
         Bucket bucket2 = saveDto2.toEntity();
         saveDto2.getSubBucketSaveRequestDtoList()
                .stream()
@@ -171,54 +166,58 @@ class BucketServiceTest {
 
 
     @Test
-    @DisplayName("재작성")
+    @DisplayName("컨탠츠업데이트 dto 을 받으면 컨탠츠 업데이트가 완료되어야함")
     public void 컨탠츠업데이트_테스트() throws Exception{
         //given
-        User user = userRepository.findById(1L)
-                                  .get();
+        User user = getUser();
+        Bucket bucket = getBucketWithSubBucket(1L, user, "버킷내용 률류~~");
 
-        Bucket bucket1 = Bucket.builder()
-                               .content("버킷")
-                               .bucketStatus(BucketStatus.ONGOING)
-                               .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
-                               .user(user)
-                               .uploadTime(LocalDateTime.now())
-                               .modifiedTime(LocalDateTime.now())
-                               .build();
-        bucketRepository.save(bucket1);
+        String content = "수종된 세부내용 룰루~";
+        BucketContentUpdateDto updateDto = BucketContentUpdateDto.builder()
+                                                                 .BucketId(1L)
+                                                                 .content(content)
+                                                                 .build();
+
+        given(bucketRepository.findById(anyLong())).willReturn(Optional.of(bucket));
+
         //when
-        bucketService.updateBucketContent(BucketContentUpdateDto.builder()
-                                                                .content("수정")
-                                                                .updateTime(LocalDateTime.now())
-                                                                .build(), 1L);
+        Long bucketId = bucketService.updateBucketContent(updateDto);
+
         //then
+        then(bucketRepository).should(times(1))
+                              .findById(anyLong());
+        assertThat(bucketId).isEqualTo(1L);
         bucketRepository.findById(1L)
                         .map(Bucket::getContent)
                         .stream()
-                        .allMatch(s -> s.equals("수정"));
+                        .allMatch(s -> s.equals(content));
+
     }
+
+
 
     @Test
     public void 버킷상태_업데이트() throws Exception{
         //given
-        User user = userRepository.findById(1L)
-                                  .get();
+        User user = getUser();
+        Bucket bucket = getBucketWithSubBucket(1L, user, "상태바꿔보자잉");
 
-        Bucket bucket1 = Bucket.builder()
-                               .content("버킷")
-                               .bucketStatus(BucketStatus.ONGOING)
-                               .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
-                               .user(user)
-                               .uploadTime(LocalDateTime.now())
-                               .modifiedTime(LocalDateTime.now())
-                               .build();
-        bucketRepository.save(bucket1);
-        //when
-        bucketService.updateBucketStatus(BucketStatusUpdateDto.builder()
+
+        BucketStatusUpdateDto updateDto = BucketStatusUpdateDto.builder()
+                                                               .BucketId(1L)
                                                                .status(BucketStatus.COMPLETED)
-                                                               .updateTime(LocalDateTime.now())
-                                                               .build(), 1L);
+                                                               .build();
+
+        given(bucketRepository.findById(anyLong())).willReturn(Optional.of(bucket));
+
+        //when
+        Long id = bucketService.updateBucketStatus(updateDto);
         //then
+
+        then(bucketRepository).should(times(1))
+                              .findById(anyLong());
+        assertThat(id).isEqualTo(updateDto.getBucketId());
+
         bucketRepository.findById(1L)
                         .map(Bucket::getBucketStatus)
                         .stream()
@@ -243,6 +242,38 @@ class BucketServiceTest {
                                                        .bucketStatus(BucketStatus.ONGOING)
                                                        .build();
         return dto;
+    }
+    private Bucket getBucketWithSubBucket(long id, User user, String content) {
+
+        Bucket bucket = Bucket.builder()
+                             .modifiedTime(LocalDateTime.now())
+                             .uploadTime(LocalDateTime.now())
+                             .id(id)
+                             .bucketStatus(BucketStatus.ONGOING)
+                             .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                             .content(content)
+                             .user(user)
+                             .subBucketList(new ArrayList<>())
+                             .build();
+        bucket.addSubBucket(SubBucket.builder()
+                                     .uploadTime(LocalDateTime.now())
+                                     .modifiedTime(LocalDateTime.now())
+                                     .content("세부내용 룰루~")
+                                     .id(1L)
+                                     .build());
+
+        bucket.addSubBucket(SubBucket.builder()
+                                     .uploadTime(LocalDateTime.now())
+                                     .modifiedTime(LocalDateTime.now())
+                                     .content("세부내용 룰루~")
+                                     .id(1L)
+                                     .build());
+        return bucket;
+    }
+    //테스용 유저조회
+    private User getUser() {
+        return userRepository.findById(1L)
+                             .orElseThrow(() -> new IllegalArgumentException("Mock 유저 존재하지않음"));
     }
 
 }

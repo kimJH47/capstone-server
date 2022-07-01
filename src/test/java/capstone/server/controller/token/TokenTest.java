@@ -1,6 +1,6 @@
 package capstone.server.controller.token;
 
-import capstone.server.basic.WithMockCustomOAuth2Account;
+import capstone.server.utll.WithMockCustomOAuth2Account;
 import capstone.server.controller.BucketController;
 import capstone.server.oauth.config.SecurityConfig;
 import capstone.server.oauth.config.properties.AppProperties;

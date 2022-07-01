@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class BucketResponseDto {
 
 
+    private Long id;
     private String content;
     @NotNull
     private BucketStatus bucketStatus;
@@ -40,6 +41,7 @@ public class BucketResponseDto {
         //세부목표 dto 변환
         List<SubBucketResponseDto> dtoList = subBucketList.stream()
                                                           .map(subBucket -> SubBucketResponseDto.builder()
+                                                                                                .id(subBucket.getId())
                                                                                                 .content(subBucket.getContent())
                                                                                                 .subBucketStatus(subBucket.getSubBucketStatus())
                                                                                                 .uploadTime(subBucket.getUploadTime())
@@ -48,6 +50,7 @@ public class BucketResponseDto {
                                                           .collect(Collectors.toList());
 
         return BucketResponseDto.builder()
+                                .id(bucket.getId())
                                 .content(bucket.getContent())
                                 .bucketPrivacyStatus(bucket.getBucketPrivacyStatus())
                                 .bucketStatus(bucket.getBucketStatus())

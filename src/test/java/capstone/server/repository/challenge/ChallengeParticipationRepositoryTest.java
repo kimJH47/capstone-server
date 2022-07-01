@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -54,8 +53,6 @@ class ChallengeParticipationRepositoryTest {
         challengeService.save(ChallengeSaveRequestDto.builder()
                                                      .content("챌린지 1")
                                                      .maxJoinNum(5)
-                                                     .uploadTime(LocalDateTime.now())
-                                                     .modifiedTime(LocalDateTime.now())
                                                      .title("챌린지 제목")
                                                      .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
                                                      .userId(1L)
