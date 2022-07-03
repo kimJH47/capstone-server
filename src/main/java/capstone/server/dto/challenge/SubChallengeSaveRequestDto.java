@@ -17,6 +17,6 @@ public class SubChallengeSaveRequestDto {
     private String content;
 
     public SubChallenge toEntity() {
-        return null;
+        return new SubChallenge(this.content);
     }
 }

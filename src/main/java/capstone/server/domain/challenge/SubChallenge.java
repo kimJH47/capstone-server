@@ -1,9 +1,12 @@
 package capstone.server.domain.challenge;
 
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
 public class SubChallenge {
 
     @Id
@@ -15,6 +18,9 @@ public class SubChallenge {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
+    public SubChallenge(String content) {
+        this.content = content;
+    }
     public void changeChallenge(Challenge challenge) {
         this.challenge = challenge;
     }

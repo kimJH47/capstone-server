@@ -3,6 +3,7 @@ package capstone.server.service;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
+import capstone.server.domain.bucket.SubBucketStatus;
 import capstone.server.domain.challenge.*;
 import capstone.server.dto.challenge.*;
 import capstone.server.exception.CustomException;
@@ -10,6 +11,8 @@ import capstone.server.exception.ErrorCode;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
 import capstone.server.repository.challenge.ChallengeRepository;
+import capstone.server.repository.challenge.SubChallengeRepository;
+import capstone.server.repository.challenge.UserSubChallengeInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
     private final ChallengeParticipationRepository challengeParticipationRepository;
+    private final SubChallengeRepository subChallengeRepository;
+    private final UserSubChallengeInfoRepository userSubChallengeInfoRepository;
 
     @Transactional
     public ChallengeParticipationResponseDto save(ChallengeSaveRequestDto requestDto) {
@@ -42,8 +47,20 @@ public class ChallengeService {
             challenge.updateTagList(collect);
         }
         List<SubChallengeSaveRequestDto> subChallengeSaveRequestDtoList = requestDto.getSubChallengeSaveRequestDtoList();
-
-
+        if (!subChallengeSaveRequestDtoList.isEmpty()) {
+            subChallengeSaveRequestDtoList.stream()
+                                          .map(SubChallengeSaveRequestDto::toEntity)
+                                          .forEach(subChallenge -> {
+                                              subChallenge.changeChallenge(challenge);
+                                              subChallengeRepository.save(subChallenge);
+                                              UserSubChallengeInfo challengeInfo = UserSubChallengeInfo.builder()
+                                                                                                       .subChallenge(subChallenge)
+                                                                                                       .user(findUser)
+                                                                                                       .subBucketStatus(SubBucketStatus.ONGOING)
+                                                                                                       .build();
+                                              userSubChallengeInfoRepository.save(challengeInfo);
+                                          });
+        }
         //챌린지참가 정보에 바로 추가하기
         Challenge save = challengeRepository.save(challenge);
         ChallengeParticipation challengeParticipation = challengeParticipationRepository.save(ChallengeParticipation.builder()
@@ -54,6 +71,7 @@ public class ChallengeService {
                                                                                                   .joinStatus(JoinStatus.SUCCEEDED)
                                                                                                   .challengeRoleType(ChallengeRoleType.ADMIN)
                                                                                                   .build());
+
         return new ChallengeParticipationResponseDto(challengeParticipation);
 
     }

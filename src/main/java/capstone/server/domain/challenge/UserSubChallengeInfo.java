@@ -27,8 +27,9 @@ public class UserSubChallengeInfo {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenge_id")
-    private Challenge challenge;
+    @JoinColumn(name = "sub_challenge_id")
+    //매핑을 챌린지에 해야하나 아니면 정보에다가 해야하나?
+    private SubChallenge subChallenge;
 
     @Enumerated(EnumType.STRING)
     private SubBucketStatus subBucketStatus;
