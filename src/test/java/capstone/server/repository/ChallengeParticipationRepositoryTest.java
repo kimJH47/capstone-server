@@ -1,4 +1,4 @@
-package capstone.server.repository.challenge;
+package capstone.server.repository;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
@@ -6,7 +6,8 @@ import capstone.server.domain.challenge.Challenge;
 import capstone.server.domain.challenge.ChallengeParticipation;
 import capstone.server.domain.challenge.JoinStatus;
 import capstone.server.dto.challenge.ChallengeSaveRequestDto;
-import capstone.server.repository.UserRepository;
+import capstone.server.repository.challenge.ChallengeParticipationRepository;
+import capstone.server.repository.challenge.ChallengeRepository;
 import capstone.server.service.ChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

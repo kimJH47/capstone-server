@@ -29,8 +29,6 @@ public class Challenge {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-
     private String title;
     private String content;
 
@@ -53,10 +51,10 @@ public class Challenge {
 
     public void updateTagList(List<ChallengeTag> tagList) {
         tagList.stream()
-                .forEach(challengeTag -> updateTag(challengeTag));
+                .forEach(challengeTag -> addTag(challengeTag));
     }
 
-    private void updateTag(ChallengeTag challengeTag) {
+    private void addTag(ChallengeTag challengeTag) {
         this.tagList.add(challengeTag);
         challengeTag.changeChallenge(this);
     }

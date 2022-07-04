@@ -23,7 +23,6 @@ public class ChallengeTag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
-
     public ChallengeTag(String content) {
         this.content = content;
     }

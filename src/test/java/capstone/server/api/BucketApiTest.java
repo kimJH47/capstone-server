@@ -202,15 +202,16 @@ public class BucketApiTest {
 
     private Bucket getBucketWithSubBucket(long id, User user, String content) {
         Bucket bucket = Bucket.builder()
-                             .modifiedTime(LocalDateTime.now())
-                             .uploadTime(LocalDateTime.now())
-                             .id(id)
-                             .bucketStatus(BucketStatus.ONGOING)
-                             .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
-                             .content(content)
-                             .user(user)
-                             .subBucketList(new ArrayList<>())
-                             .build();
+                              .modifiedTime(LocalDateTime.now())
+                              .uploadTime(LocalDateTime.now())
+                              .id(id)
+                              .bucketStatus(BucketStatus.ONGOING)
+                              .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                              .content(content)
+                              .user(user)
+                              .subBucketList(new ArrayList<>())
+                              .targetDate(LocalDateTime.now())
+                              .build();
         bucket.addSubBucket(SubBucket.builder()
                                      .content("세부 꿈나무 야후~")
                                      .modifiedTime(LocalDateTime.now())

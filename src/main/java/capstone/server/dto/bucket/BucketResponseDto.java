@@ -34,6 +34,8 @@ public class BucketResponseDto {
     private LocalDateTime uploadTime;
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime modifiedTime;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private LocalDateTime targetDate;
 
 
     public static BucketResponseDto create(Bucket bucket) {
@@ -56,21 +58,12 @@ public class BucketResponseDto {
                                 .bucketStatus(bucket.getBucketStatus())
                                 .modifiedTime(bucket.getModifiedTime())
                                 .uploadTime(bucket.getUploadTime())
+                                .targetDate(bucket.getTargetDate())
                                 .subBucketList(dtoList)
                                 .build();
     }
-
     public void changeSubBucketList(List<SubBucketResponseDto> list) {
         this.subBucketList = list;
     }
-    @Override
-    public String toString() {
-        return "BucketResponseDto{" +
-                "content='" + content + '\'' +
-                ", bucketStatus=" + bucketStatus +
-                ", bucketPrivacyStatus=" + bucketPrivacyStatus +
-                ", uploadTime=" + uploadTime +
-                ", modifiedTime=" + modifiedTime +
-                '}';
-    }
+
 }

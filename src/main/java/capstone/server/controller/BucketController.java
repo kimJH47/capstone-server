@@ -72,7 +72,6 @@ public class BucketController {
     public ResponseEntity<?> findOne(@PathVariable Long id) {
 
         BucketResponseDto findBucket = bucketService.findOne(id);
-        System.out.println("findBucket = " + findBucket);
         return ResponseEntity.ok()
                              .body(findBucket);
     }

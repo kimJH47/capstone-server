@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class BucketSaveRequestDto {
     @NotNull
     private BucketPrivacyStatus bucketPrivacyStatus;
     private List<SubBucketSaveRequestDto> subBucketSaveRequestDtoList;
+    private LocalDateTime targetDate;
 
     public Bucket toEntity() {
         return Bucket.builder()
@@ -33,6 +35,7 @@ public class BucketSaveRequestDto {
                      .bucketStatus(this.getBucketStatus())
                      .bucketPrivacyStatus(this.getBucketPrivacyStatus())
                      .subBucketList(new ArrayList<>())
+                     .targetDate(this.getTargetDate())
                      .build();
     }
 }

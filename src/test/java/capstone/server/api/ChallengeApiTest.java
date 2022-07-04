@@ -206,7 +206,6 @@ public class ChallengeApiTest {
     }
 
     //챌린지 참가 예외테스트
-
     @Test
     @DisplayName("챌린지 아이디를 GET 하면 해당 챌린지의 참가정보들이 반환되어야함")
     @WithMockCustomOAuth2Account

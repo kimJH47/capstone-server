@@ -47,7 +47,7 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
     }
 
     public BooleanExpression eqTitle(String title) {
-        return title != null ? challenge.title.like(title) : null;
+        return title != null ? challenge.title.contains(title) : null;
     }
 
     public BooleanExpression eqStatus(BucketStatus challengeStatus) {

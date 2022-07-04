@@ -17,9 +17,7 @@ public class BucketImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bucket_image_id")
     private Long id;
-
     private LocalDateTime uploadTime;
-
     private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)

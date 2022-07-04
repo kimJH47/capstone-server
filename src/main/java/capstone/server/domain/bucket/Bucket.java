@@ -34,6 +34,7 @@ public class Bucket {
     private LocalDateTime uploadTime;
     private LocalDateTime modifiedTime;
 
+    private LocalDateTime targetDate;
 
     //조회편의성을 위해 양방향 구현
     @OneToMany(mappedBy = "id",cascade = CascadeType.ALL,fetch = FetchType.LAZY)

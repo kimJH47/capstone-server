@@ -30,6 +30,7 @@ public class BucketService {
         User findUser = userRepository.findById(requestDto.getUserId())
                                       .orElseThrow(() -> new IllegalArgumentException("테이블에 유저데이터가 없습니다"));
         Bucket bucket = requestDto.toEntity();
+
         bucket.changeUser(findUser);
         requestDto.getSubBucketSaveRequestDtoList()
                   .stream()

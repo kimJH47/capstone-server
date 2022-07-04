@@ -246,15 +246,16 @@ class BucketServiceTest {
     private Bucket getBucketWithSubBucket(long id, User user, String content) {
 
         Bucket bucket = Bucket.builder()
-                             .modifiedTime(LocalDateTime.now())
-                             .uploadTime(LocalDateTime.now())
-                             .id(id)
-                             .bucketStatus(BucketStatus.ONGOING)
-                             .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
-                             .content(content)
-                             .user(user)
-                             .subBucketList(new ArrayList<>())
-                             .build();
+                              .modifiedTime(LocalDateTime.now())
+                              .uploadTime(LocalDateTime.now())
+                              .id(id)
+                              .bucketStatus(BucketStatus.ONGOING)
+                              .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                              .content(content)
+                              .user(user)
+                              .subBucketList(new ArrayList<>())
+                              .targetDate(LocalDateTime.now())
+                              .build();
         bucket.addSubBucket(SubBucket.builder()
                                      .uploadTime(LocalDateTime.now())
                                      .modifiedTime(LocalDateTime.now())
