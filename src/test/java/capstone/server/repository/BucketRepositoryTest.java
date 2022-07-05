@@ -61,10 +61,9 @@ class BucketRepositoryTest {
         //when
         List<Bucket> buckets = bucketRepository.searchBucket(bucketSearch);
         //then
-        buckets.stream()
-                 .map(Bucket::getContent)
-                 .allMatch(content -> content.matches("(.*)버킷(.*)"));
-
+        assertEquals(true, buckets.stream()
+                                  .map(Bucket::getContent)
+                                  .allMatch(content -> content.matches("(.*)버킷(.*)")));
         assertEquals(buckets.size(),2);
 
     }
@@ -95,9 +94,10 @@ class BucketRepositoryTest {
         //when
         List<Bucket> buckets = bucketRepository.searchBucket(bucketSearch);
         //then
-        buckets.stream()
-               .map(Bucket::getBucketStatus)
-               .allMatch(bucketStatus -> bucketStatus.equals(BucketStatus.ONGOING));
+
+        assertEquals(true, buckets.stream()
+                                   .map(Bucket::getBucketStatus)
+                                   .allMatch(bucketStatus -> bucketStatus.equals(BucketStatus.ONGOING)));;
         assertEquals(buckets.size(),2);
 
     }
@@ -136,9 +136,10 @@ class BucketRepositoryTest {
         List<Bucket> buckets = bucketRepository.findAllByUser(user);
         //then
         assertEquals(buckets.size(), 2);
-        buckets.stream()
-               .map(bucket1 -> bucket1.getUser().getUsername())
-               .allMatch(name ->name.equals("testName"));
+        assertEquals(true,buckets.stream()
+                                 .map(bucket1 -> bucket1.getUser().getUsername())
+                                 .allMatch(name ->name.equals("testName")));
+
 
     }
     private Bucket getBucket(String content, BucketPrivacyStatus status,User user) {

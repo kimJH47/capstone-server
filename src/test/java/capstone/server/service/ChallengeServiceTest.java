@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -69,13 +70,14 @@ class  ChallengeServiceTest {
         Challenge challenge = getChallengeWithTag(1L, "새로운 챌린지", "내용드갑니다", user);
         ChallengeParticipation challengeParticipation = getChallengeParticipation(user, challenge, 1L, ChallengeRoleType.ADMIN, JoinStatus.SUCCEEDED);
         ChallengeSaveRequestDto requestDto = ChallengeSaveRequestDto.builder()
-                                                               .userId(1L)
-                                                               .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
-                                                               .content("내용드갑니다")
-                                                               .maxJoinNum(10)
-                                                               .tagList(new ArrayList<>())
-                                                               .title("새로운 챌린지")
-                                                               .build();
+                                                                    .userId(1L)
+                                                                    .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)
+                                                                    .content("내용드갑니다")
+                                                                    .maxJoinNum(10)
+                                                                    .tagList(new ArrayList<>())
+                                                                    .subChallengeSaveRequestDtoList(new ArrayList<>())
+                                                                    .title("새로운 챌린지")
+                                                                    .build();
 
         given(challengeRepository.save(any(Challenge.class))).willReturn(challenge);
         given(challengeParticipationRepository.save(any(ChallengeParticipation.class))).willReturn(challengeParticipation);
@@ -120,10 +122,12 @@ class  ChallengeServiceTest {
         //then
         then(challengeParticipationRepository).should(times(1))
                                               .findAllByChallenge(any(Challenge.class));
+
         assertThat(responseDtos.size()).isEqualTo(5);
-        responseDtos.stream()
-                    .map(ChallengeParticipationResponseDto::getChallengeRoleType)
-                    .anyMatch(type -> type.equals(ChallengeRoleType.ADMIN));
+        assertThat(true).isEqualTo(responseDtos.stream()
+                                               .map(ChallengeParticipationResponseDto::getChallengeRoleType)
+                                               .anyMatch(type -> type.equals(ChallengeRoleType.MEMBER)));
+
 
     }
     @Test

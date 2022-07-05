@@ -187,10 +187,11 @@ class BucketServiceTest {
         then(bucketRepository).should(times(1))
                               .findById(anyLong());
         assertThat(bucketId).isEqualTo(1L);
-        bucketRepository.findById(1L)
-                        .map(Bucket::getContent)
-                        .stream()
-                        .allMatch(s -> s.equals(content));
+
+        assertThat(true).isEqualTo(bucketRepository.findById(1L)
+                                                   .map(Bucket::getContent)
+                                                   .stream()
+                                                   .allMatch(s -> s.equals(content)));
 
     }
 
@@ -217,12 +218,10 @@ class BucketServiceTest {
         then(bucketRepository).should(times(1))
                               .findById(anyLong());
         assertThat(id).isEqualTo(updateDto.getBucketId());
-
-        bucketRepository.findById(1L)
-                        .map(Bucket::getBucketStatus)
-                        .stream()
-                        .allMatch(bucketStatus -> bucketStatus.equals(BucketStatus.COMPLETED));
-
+        assertThat(true).isEqualTo(bucketRepository.findById(1L)
+                                                   .map(Bucket::getBucketStatus)
+                                                   .stream()
+                                                   .allMatch(bucketStatus -> bucketStatus.equals(BucketStatus.COMPLETED)));
     }
 
     //테스트용 dto

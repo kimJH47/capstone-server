@@ -26,7 +26,7 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
     public List<Challenge> searchChallenge(ChallengeSearch challengeSearch) {
         return jpaQueryFactory.selectFrom(challenge)
                               .where(challenge.challengePrivacyStatus.eq(BucketPrivacyStatus.PUBLIC),
-                                      eqTitle(challengeSearch.getTitle()),
+                                      containsTitle(challengeSearch.getTitle()),
                                       eqStatus(challengeSearch.getChallengeStatus()))
                               .limit(100)
                               .fetch();
@@ -39,14 +39,14 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
                               .leftJoin(challenge.tagList, challengeTag)
                               .on(challengeTag.content.in(challengeSearch.getTagList()))
                               .where(challenge.challengePrivacyStatus.eq(BucketPrivacyStatus.PUBLIC),
-                                      eqTitle(challengeSearch.getTitle()),
+                                      containsTitle(challengeSearch.getTitle()),
                                       eqStatus(challengeSearch.getChallengeStatus()),
                                       eqMaxJoinNum(challengeSearch.getMaxJoinNum()))
                               .distinct()
                               .fetch();
     }
 
-    public BooleanExpression eqTitle(String title) {
+    public BooleanExpression containsTitle(String title) {
         return title != null ? challenge.title.contains(title) : null;
     }
 

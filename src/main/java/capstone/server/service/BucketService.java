@@ -46,6 +46,7 @@ public class BucketService {
 
         Bucket findBucket = bucketRepository.findById(id)
                                             .orElseThrow(() -> new IllegalArgumentException("테이블에 버킷이 없습니다"));
+
         return BucketResponseDto.create(findBucket);
     }
 

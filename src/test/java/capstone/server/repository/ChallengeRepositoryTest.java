@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
 @Import(JpaConfig.class)
@@ -48,26 +50,73 @@ public class ChallengeRepositoryTest {
         em.persist(user);
         Challenge challenge = getChallenge("testTitle", "testContent", user);
 
+        List<ChallengeTag> list = new ArrayList<>();
+        list.add(new ChallengeTag("여행"));
+        list.add(new ChallengeTag("휴가"));
+        challenge.updateTagList(list);
+
+        challengeRepository.save(challenge);
+
+
+        //검색되면 안되는 챌린지(태그는 일치하나 컨탠츠는 일치 x
+        Challenge otherChallenge = getChallenge("other", "other", user);
+        List<ChallengeTag> list2 = new ArrayList<>();
+        list2.add(new ChallengeTag("여행"));
+        otherChallenge.updateTagList(list2);
+        challengeRepository.save(otherChallenge);
+
+
+        ChallengeSearch challengeSearch = new ChallengeSearch();
+        challengeSearch.setTitle("test");
+        List<String> tags = new ArrayList<>();
+        tags.add("여행");
+        challengeSearch.setTagList(tags);
+
+
+        //when
+        List<Challenge> challenges = challengeRepository.searchToTag(challengeSearch);
+        //then
+        assertThat(true).isEqualTo(challenges.stream()
+                                             .map(Challenge::getContent)
+                                             .allMatch(content -> content.matches("(.*)test(.*)")));
+        assertThat(challenges.size()).isEqualTo(1);
+    }
+    @Test
+    @DisplayName("ChallengeSearch 를 이용해서 검색하지만 조건에 만족하는 챌린지가 없어 0개가 반환되어야함")
+    public void 챌린지_태그검색_0개() throws Exception{
+        //given
+        User user = getUser("1", "email@tesat.com", "testName");
+        em.persist(user);
+        Challenge challenge = getChallenge("otherTitle", "other1", user);
 
         List<ChallengeTag> list = new ArrayList<>();
         list.add(new ChallengeTag("여행"));
         list.add(new ChallengeTag("휴가"));
         challenge.updateTagList(list);
 
+        challengeRepository.save(challenge);
 
-        List<String> tags = new ArrayList<>();
-        tags.add("여행");
+        Challenge otherChallenge = getChallenge("otherTitle2", "other2", user);
+        List<ChallengeTag> list2 = new ArrayList<>();
+        list2.add(new ChallengeTag("여행"));
+        otherChallenge.updateTagList(list2);
+        challengeRepository.save(otherChallenge);
 
         ChallengeSearch challengeSearch = new ChallengeSearch();
-        challengeSearch.setTitle("other");
+        List<String> tags = new ArrayList<>();
+        tags.add("여행");
         challengeSearch.setTagList(tags);
+        //타이틀에 test가 포함되는 챌린지 검색
+        challengeSearch.setTitle("test");
+
+
 
         //when
         List<Challenge> challenges = challengeRepository.searchToTag(challengeSearch);
         //then
-        challenges.stream()
-                  .map(Challenge::getContent)
-                .allMatch(content -> content.matches("(.*)test(.*)"));
+        assertThat(challenges.size()).isEqualTo(0);
+
+
     }
     private Challenge getChallenge(String title, String content, User user) {
 
