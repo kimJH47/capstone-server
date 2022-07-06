@@ -1,2 +1,2 @@
-package capstone.server.service.sns;public class HeartService {
+package capstone.server.service.sns;public class LikeService {
 }
