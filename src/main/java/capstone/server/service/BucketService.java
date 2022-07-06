@@ -3,6 +3,7 @@ package capstone.server.service;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
+import capstone.server.domain.bucket.SubBucket;
 import capstone.server.dto.bucket.*;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketImageRepository;
@@ -32,10 +33,15 @@ public class BucketService {
         Bucket bucket = requestDto.toEntity();
 
         bucket.changeUser(findUser);
-        requestDto.getSubBucketSaveRequestDtoList()
-                  .stream()
-                  .map(SubBucketSaveRequestDto::toEntity)
-                  .forEach(bucket::addSubBucket);
+        List<SubBucket> subBuckets = requestDto.getSubBucketSaveRequestDtoList()
+                                            .stream()
+                                            .map(SubBucketSaveRequestDto::toEntity)
+                                            .collect(Collectors.toList());
+
+        //forEach 를 for-each 로 반복문으로 분리
+        for (SubBucket subBucket : subBuckets) {
+            bucket.addSubBucket(subBucket);
+        }
 
         Bucket saveBucket = bucketRepository.save(bucket);
         return saveBucket.getId();

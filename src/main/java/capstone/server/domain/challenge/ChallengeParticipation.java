@@ -49,7 +49,16 @@ public class ChallengeParticipation {
         this.joinStatus = joinStatus;
     }
 
-
+    public static ChallengeParticipation create(Challenge challenge, User user, JoinStatus joinStatus, ChallengeRoleType roleType){
+        return ChallengeParticipation.builder()
+                                     .challenge(challenge)
+                                     .user(user)
+                                     .joinTime(LocalDateTime.now())
+                                     .requestTime(LocalDateTime.now())
+                                     .joinStatus(joinStatus)
+                                     .challengeRoleType(roleType)
+                                     .build();
+    }
 
 
 

@@ -35,7 +35,7 @@ public class SubBucketService {
         subBucket.changeBucket(findBucket);
         subBucketRepository.save(subBucket);
     }
-    //정적 dto 생성메서드 만들까?
+    //정적 dto 생성메서드 or 생성자로 넘길까...
     @Transactional(readOnly = true)
     public List<SubBucketResponseDto> findByBucketId(Long id) {
         List<SubBucketResponseDto> responseDtos = subBucketRepository.findByBucketId(id)
@@ -48,9 +48,9 @@ public class SubBucketService {
                                                                                                       .build())
                                                                 .collect(Collectors.toList());
 
-        if (responseDtos.isEmpty()) {
-            new IllegalArgumentException("테이블에 세부목표가 존재하지 않습니다");
-        }
+//        if (responseDtos.isEmpty()) {
+//            new IllegalArgumentException("테이블에 세부목표가 존재하지 않습니다");
+//        }
         return responseDtos;
 
     }

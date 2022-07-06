@@ -60,21 +60,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                                                           " account. Please use your " + OsavedUser.get()
                                                                                                    .getProviderType() + " account to login.")), user.getAttributes());
 
-        } else {
-            User savedUser = createUser(userInfo, providerType);
-            return UserPrincipal.create(savedUser, user.getAttributes());
         }
-//        if (savedUser!=null) {
-//            if (providerType != savedUser.getProviderType()) {
-//                throw new OAuthProviderMissMatchException(
-//                        "Looks like you're signed up with " + providerType +
-//                                " account. Please use your " + savedUser.getProviderType() + " account to login."
-//                );
-//            }
-//            updateUser(savedUser, userInfo);
-//        } else {
-//            savedUser = createUser(userInfo, providerType);
-//        }
+        User savedUser = createUser(userInfo, providerType);
+        return UserPrincipal.create(savedUser, user.getAttributes());
+
     }
 
     private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {

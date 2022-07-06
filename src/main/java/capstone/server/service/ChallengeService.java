@@ -12,7 +12,7 @@ import capstone.server.repository.UserRepository;
 import capstone.server.repository.challenge.ChallengeParticipationRepository;
 import capstone.server.repository.challenge.ChallengeRepository;
 import capstone.server.repository.challenge.SubChallengeRepository;
-import capstone.server.repository.challenge.UserSubChallengeInfoRepository;
+import capstone.server.repository.challenge.SubChallengeParticipationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,13 +29,13 @@ public class ChallengeService {
     private final UserRepository userRepository;
     private final ChallengeParticipationRepository challengeParticipationRepository;
     private final SubChallengeRepository subChallengeRepository;
-    private final UserSubChallengeInfoRepository userSubChallengeInfoRepository;
+    private final SubChallengeParticipationRepository subChallengeParticipationRepository;
 
     @Transactional
     public ChallengeParticipationResponseDto save(ChallengeSaveRequestDto requestDto) {
 
-        User findUser = userRepository.findById(requestDto.getUserId())
-                                      .orElseThrow(() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다"));
+        User findUser = createUser(requestDto.getUserId());
+
         Challenge challenge = requestDto.toEntity();
         challenge.changeUser(findUser);
         List<String> tagList = requestDto.getTagList();
@@ -47,34 +47,32 @@ public class ChallengeService {
             challenge.updateTagList(collect);
         }
         List<SubChallengeSaveRequestDto> subChallengeSaveRequestDtoList = requestDto.getSubChallengeSaveRequestDtoList();
+
         if (!subChallengeSaveRequestDtoList.isEmpty()) {
             subChallengeSaveRequestDtoList.stream()
                                           .map(SubChallengeSaveRequestDto::toEntity)
-                                          .forEach(subChallenge -> {
+                                          .forEach(subChallenge-> {
                                               subChallenge.changeChallenge(challenge);
-                                              subChallengeRepository.save(subChallenge);
-                                              UserSubChallengeInfo challengeInfo = UserSubChallengeInfo.builder()
-                                                                                                       .subChallenge(subChallenge)
-                                                                                                       .user(findUser)
-                                                                                                       .subBucketStatus(SubBucketStatus.ONGOING)
-                                                                                                       .build();
-                                              userSubChallengeInfoRepository.save(challengeInfo);
+                                              SubChallenge save = subChallengeRepository.save(subChallenge);
+                                              SubChallengeParticipation subChallengeParticipation = SubChallengeParticipation.builder()
+                                                                                                                 .subChallenge(save)
+                                                                                                                 .user(findUser)
+                                                                                                                 .subBucketStatus(SubBucketStatus.ONGOING)
+                                                                                                                 .build();
+                                              subChallengeParticipationRepository.save(subChallengeParticipation);
                                           });
         }
         //챌린지참가 정보에 바로 추가하기
-        Challenge save = challengeRepository.save(challenge);
-        ChallengeParticipation challengeParticipation = challengeParticipationRepository.save(ChallengeParticipation.builder()
-                                                                                                  .challenge(save)
-                                                                                                  .user(findUser)
-                                                                                                  .joinTime(save.getUploadTime())
-                                                                                                  .requestTime(save.getUploadTime())
-                                                                                                  .joinStatus(JoinStatus.SUCCEEDED)
-                                                                                                  .challengeRoleType(ChallengeRoleType.ADMIN)
-                                                                                                  .build());
+        Challenge saveChallenge = challengeRepository.save(challenge);
+
+        ChallengeParticipation challengeParticipation =
+                challengeParticipationRepository.save(ChallengeParticipation.create(saveChallenge, findUser, JoinStatus.SUCCEEDED, ChallengeRoleType.ADMIN));
 
         return new ChallengeParticipationResponseDto(challengeParticipation);
 
     }
+
+
 
 
     /**
@@ -92,21 +90,15 @@ public class ChallengeService {
         if (findChallenge.getChallengePrivacyStatus()
                          .equals(BucketPrivacyStatus.PRIVATE)) {
             throw new CustomException(ErrorCode.CHALLENGE_NOT_PUBLIC);
-        } else if (isFullChallengeUsers(findChallenge)) {
+        }
+        if (isFullChallengeUsers(findChallenge)) {
             throw new CustomException(ErrorCode.CHALLENGE_FULL_USERS);
         }
 
-        User findUser = userRepository.findById(requestDto.getUserId())
-                                      .orElseThrow((() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다")));
+        User findUser = createUser(requestDto.getUserId());
+        ChallengeParticipation challengeParticipation = ChallengeParticipation.create(findChallenge, findUser, JoinStatus.WAIT, ChallengeRoleType.RESERVE);
 
-        ChallengeParticipation save = challengeParticipationRepository.save(ChallengeParticipation.builder()
-                                                                                                  .challenge(findChallenge)
-                                                                                                  .user(findUser)
-                                                                                                  .joinStatus(JoinStatus.WAIT)
-                                                                                                  .requestTime(requestDto.getRequestTime())
-                                                                                                  .challengeRoleType(ChallengeRoleType.RESERVE)
-                                                                                                  .build());
-        return new ChallengeParticipationResponseDto(save);
+        return new ChallengeParticipationResponseDto(challengeParticipationRepository.save(challengeParticipation));
 
 
     }
@@ -115,9 +107,9 @@ public class ChallengeService {
     public ChallengeParticipationResponseDto updateJoinStatus(ChallengeJoinStatusUpdateDto updateDto) {
         //어드민만 참가정보 변경가능, 참가정보가 바뀌면 ChallengeRoleType 도 같이 변경되야함. dto의 userId 는 변경을 요청하는 User의 Id를 말함(어드민)
 
-        ChallengeParticipation adminarticipation = challengeParticipationRepository.findById(updateDto.getAdminParticipationId())
+        ChallengeParticipation adminParticipation = challengeParticipationRepository.findById(updateDto.getAdminParticipationId())
                                                                                       .orElseThrow(() -> new IllegalArgumentException("테이블에 참가정보가 존재하지 않습니다"));
-        if(adminarticipation.getChallengeRoleType().equals(ChallengeRoleType.ADMIN)){
+        if(adminParticipation.getChallengeRoleType().equals(ChallengeRoleType.ADMIN)){
 
             ChallengeParticipation participation = challengeParticipationRepository.findById(updateDto.getChallengeParticipationId())
                                                                                    .orElseThrow(() -> new IllegalArgumentException("테이블에 참가정보가 존재하지 않습니다"));
@@ -145,7 +137,6 @@ public class ChallengeService {
 
         Challenge challenge = challengeRepository.findById(id)
                                                  .orElseThrow(() -> new IllegalArgumentException("테이블에 챌린지가 존재하지 않습니다"));
-
         List<ChallengeParticipation> allByChallenge = challengeParticipationRepository.findAllByChallenge(challenge);
 
         return allByChallenge.stream()
@@ -154,7 +145,7 @@ public class ChallengeService {
 
 
     }
-
+    //챌린지 참가신청유저 조회( RoleType이 ADMIN 만 사용가능
     @Transactional(readOnly = true)
     public List<ChallengeResponseDto> searchChallenges(ChallengeSearch challengeSearch) {
 
@@ -180,5 +171,10 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.findById(id)
                                                  .orElseThrow(() -> new IllegalArgumentException("테이블에 해당 챌린지가 존재하지 않습니다"));
         return new ChallengeResponseDto(challenge);
+    }
+
+    private User createUser(Long userId) {
+        return userRepository.findById(userId)
+                             .orElseThrow(() -> new IllegalArgumentException("테이블에 유저가 존재하지 않습니다"));
     }
 }

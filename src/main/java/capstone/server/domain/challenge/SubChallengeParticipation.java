@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Builder
-public class UserSubChallengeInfo {
+public class SubChallengeParticipation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +37,6 @@ public class UserSubChallengeInfo {
     public void changeStatus(SubBucketStatus subBucketStatus) {
         this.subBucketStatus = subBucketStatus;
     }
+
+
 }
