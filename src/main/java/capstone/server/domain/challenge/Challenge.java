@@ -51,7 +51,7 @@ public class Challenge {
 
     public void updateTagList(List<ChallengeTag> tagList) {
         tagList.stream()
-                .forEach(challengeTag -> addTag(challengeTag));
+                .forEach(this::addTag);
     }
 
     private void addTag(ChallengeTag challengeTag) {

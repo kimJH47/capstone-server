@@ -39,4 +39,13 @@ public class SubChallengeParticipation {
     }
 
 
+    public static SubChallengeParticipation create(SubChallenge subChallenge, User user, SubBucketStatus bucketStatus) {
+
+        return SubChallengeParticipation.builder()
+                                        .subChallenge(subChallenge)
+                                        .user(user)
+                                        .subBucketStatus(bucketStatus)
+                                        .build();
+    }
+
 }

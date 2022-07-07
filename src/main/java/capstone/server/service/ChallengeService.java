@@ -42,25 +42,25 @@ public class ChallengeService {
 
         if (!tagList.isEmpty()) {
             List<ChallengeTag> collect = tagList.stream()
-                                                .map(s -> new ChallengeTag(s))
+                                                .map(ChallengeTag::new)
                                                 .collect(Collectors.toList());
             challenge.updateTagList(collect);
         }
         List<SubChallengeSaveRequestDto> subChallengeSaveRequestDtoList = requestDto.getSubChallengeSaveRequestDtoList();
 
         if (!subChallengeSaveRequestDtoList.isEmpty()) {
-            subChallengeSaveRequestDtoList.stream()
-                                          .map(SubChallengeSaveRequestDto::toEntity)
-                                          .forEach(subChallenge-> {
-                                              subChallenge.changeChallenge(challenge);
-                                              SubChallenge save = subChallengeRepository.save(subChallenge);
-                                              SubChallengeParticipation subChallengeParticipation = SubChallengeParticipation.builder()
-                                                                                                                 .subChallenge(save)
-                                                                                                                 .user(findUser)
-                                                                                                                 .subBucketStatus(SubBucketStatus.ONGOING)
-                                                                                                                 .build();
-                                              subChallengeParticipationRepository.save(subChallengeParticipation);
-                                          });
+
+            List<SubChallenge> subChallengeList = subChallengeSaveRequestDtoList.stream()
+                                                                       .map(SubChallengeSaveRequestDto::toEntity)
+                                                                       .collect(Collectors.toList());
+
+            for (SubChallenge subChallenge : subChallengeList) {
+                subChallenge.changeChallenge(challenge);
+                SubChallenge save = subChallengeRepository.save(subChallenge);
+                SubChallengeParticipation subChallengeParticipation = SubChallengeParticipation.create(save, findUser, SubBucketStatus.ONGOING);
+                subChallengeParticipationRepository.save(subChallengeParticipation);
+            }
+
         }
         //챌린지참가 정보에 바로 추가하기
         Challenge saveChallenge = challengeRepository.save(challenge);
@@ -94,12 +94,17 @@ public class ChallengeService {
         if (isFullChallengeUsers(findChallenge)) {
             throw new CustomException(ErrorCode.CHALLENGE_FULL_USERS);
         }
-
         User findUser = createUser(requestDto.getUserId());
         ChallengeParticipation challengeParticipation = ChallengeParticipation.create(findChallenge, findUser, JoinStatus.WAIT, ChallengeRoleType.RESERVE);
+        List<SubChallenge> subChallengeList = subChallengeRepository.findByChallenge(findChallenge);
+
+        //참가가 완료되면 챌린지 세부목표도 유저별로 생성
+        for (SubChallenge subChallenge : subChallengeList) {
+            SubChallengeParticipation subChallengeParticipation = SubChallengeParticipation.create(subChallenge, findUser, SubBucketStatus.ONGOING);
+            subChallengeParticipationRepository.save(subChallengeParticipation);
+        }
 
         return new ChallengeParticipationResponseDto(challengeParticipationRepository.save(challengeParticipation));
-
 
     }
 
@@ -118,10 +123,8 @@ public class ChallengeService {
 
             return new ChallengeParticipationResponseDto(participation);
         }
-
         throw new CustomException(ErrorCode.CHALLENGE_ROLE_TYPE_NOT_ADIMIN);
     }
-
     //챌린지 참가가능 여부확인(인원)
     @Transactional(readOnly = true)
     public boolean isFullChallengeUsers(Challenge challenge) {
@@ -130,11 +133,9 @@ public class ChallengeService {
                                                        PageRequest.of(0, maxJoinNum))
                                                .size() == maxJoinNum;
     }
-
     //챌린지 참가 유저확인
     @Transactional(readOnly = true)
     public List<ChallengeParticipationResponseDto> findParticipationByChallengeId(Long id) {
-
         Challenge challenge = challengeRepository.findById(id)
                                                  .orElseThrow(() -> new IllegalArgumentException("테이블에 챌린지가 존재하지 않습니다"));
         List<ChallengeParticipation> allByChallenge = challengeParticipationRepository.findAllByChallenge(challenge);
