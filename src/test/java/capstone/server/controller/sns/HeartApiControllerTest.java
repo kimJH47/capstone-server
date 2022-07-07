@@ -1,39 +1,31 @@
 package capstone.server.controller.sns;
 
-import capstone.server.basic.WithMockCustomOAuth2Account;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
 import capstone.server.domain.bucket.reactions.Heart;
-import capstone.server.dto.bucket.BucketSaveRequestDto;
 import capstone.server.dto.sns.HeartDto;
 import capstone.server.oauth.entity.ProviderType;
 import capstone.server.oauth.entity.RoleType;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
 import capstone.server.repository.sns.HeartRepository;
+import capstone.server.utll.WithMockCustomOAuth2Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.lang.Assert;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,7 +47,7 @@ public class HeartApiControllerTest {
     private ObjectMapper objectMapper;
 
     @DisplayName("좋아요 테스트")
-    @WithMockUser
+    @WithMockCustomOAuth2Account
     @Test
     void testCreateLike() throws Exception{
 
@@ -79,7 +71,7 @@ public class HeartApiControllerTest {
     }
 
     @DisplayName("좋아요 취소 테스트")
-    @WithMockUser
+    @WithMockCustomOAuth2Account
     @Test
     void testDuplicatedLike() throws Exception{
 
