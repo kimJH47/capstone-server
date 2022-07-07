@@ -1,33 +1,103 @@
 spring:
+  profiles.active: local
+  # 데이터 소스 설정
   datasource:
-    url: jdbc:h2:tcp://localhost/~/db;
-    username: sa
-    password: 1145
-    driver-class-name: org.h2.Driver
-  servlet:
-    multipart:
-      enabled: true
-      file-size-threshold: 2KB
-      max-file-size: 200MB
-      max-request-size: 200MB
-
-  profiles:
-    include: "auth"
-
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/bucket_project
+    username: root
+    password: 39730373
+    hikari:
+      pool-name: jpa-hikari-pool
+      maximum-pool-size: 5
+      jdbc-url: ${spring.datasource.url}
+      username: ${spring.datasource.username}
+      password: ${spring.datasource.password}
+      driver-class-name: ${spring.datasource.driver-class-name}
+      data-source-properties:
+        rewriteBatchedStatements: true
+  # JPA 설정
   jpa:
+    generate-ddl: true
     hibernate:
       ddl-auto: create
+    show-sql: true
     properties:
       hibernate:
-        generate_statistics: true
-        #show_sql: true
+        dialect: org.hibernate.dialect.MariaDB103Dialect
+        hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        default_batch_fetch_size: ${chunkSize:100}
+        jdbc.batch_size: 20
+        order_inserts: true
+        order_updates: true
         format_sql: true
+  # Security OAuth
+  security:
+    oauth2.client:
+      registration:
+        google:
+          clientId: 898353997042-eam17vi7prrpjgr1vkc3khqmj1okcqjq.apps.googleusercontent.com
+          clientSecret: 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
+          scope:
+            - email
+            - profile
+        facebook:
+          clientId: '{페이스북 client-id}'
+          clientSecret: '{페이스북 client-secret}'
+          scope:
+            - email
+            - public_profile
+        naver:
+          clientId: '{네이버 client-id}'
+          clientSecret: '{네이버 client-secret}'
+          clientAuthenticationMethod: post
+          authorizationGrantType: authorization_code
+          redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+          scope:
+            - nickname
+            - email
+            - profile_image
+          clientName: Naver
+        kakao:
+          clientId: 'c73ec9b3d3a956294e40d7b58f1f9622'
+          clientSecret: '3i2mhwAAGUcYNMONHcE1DvdKeCu5S4bg'
+          clientAuthenticationMethod: post
+          authorizationGrantType: authorization_code
+          redirectUri: "http://localhost:8080/login/oauth2/code/kakao"
+          scope:
+            - profile_nickname
+            - profile_image
+            - account_email
+          clientName: Kakao
+      # Provider 설정
+      provider:
+        naver:
+          authorizationUri: https://nid.naver.com/oauth2.0/authorize
+          tokenUri: https://nid.naver.com/oauth2.0/token
+          userInfoUri: https://openapi.naver.com/v1/nid/me
+          userNameAttribute: response
+        kakao:
+          authorizationUri: https://kauth.kakao.com/oauth/authorize
+          tokenUri: https://kauth.kakao.com/oauth/token
+          userInfoUri: https://kapi.kakao.com/v2/user/me
+          userNameAttribute: id
 
-logging:
-  level:
-    #    org.hibernate: debug
-    org.hibernate.stat: debug
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace
-#    org.hibernate.type: trace
+# cors 설정
+cors:
+  allowed-origins: 'http://localhost:3000'
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: '*'
+  max-age: 3600
 
+# jwt secret key 설정
+jwt.secret: '8sknjlO3NPTBqo319DHLNqsQAfRJEdKsETOds'
+
+# 토큰 관련 secret Key 및 RedirectUri 설정
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpiry: 1800000
+    refreshTokenExpiry: 604800000
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth/redirect

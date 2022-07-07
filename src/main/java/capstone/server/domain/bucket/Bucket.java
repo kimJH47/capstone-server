@@ -1,13 +1,16 @@
 package capstone.server.domain.bucket;
 
 import capstone.server.domain.User;
+import capstone.server.domain.bucket.reactions.Heart;
 import capstone.server.dto.bucket.BucketUpdateDto;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,6 +27,10 @@ public class Bucket {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "bucket",cascade = CascadeType.ALL)
+    Set<Heart> hearts = new HashSet<>();
+
     private String content;
 
     @Enumerated(EnumType.STRING)
@@ -33,7 +40,6 @@ public class Bucket {
 
     private LocalDateTime uploadTime;
     private LocalDateTime modifiedTime;
-
 
     //조회편의성을 위해 양방향 구현
     @OneToMany(mappedBy = "id",cascade = CascadeType.ALL,fetch = FetchType.LAZY)

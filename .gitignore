@@ -37,6 +37,8 @@ out/
 .vscode/
 .DS_Store
 
+### login secret ###
+application.yml
 
 ### aws s3###
 application-aws.yml

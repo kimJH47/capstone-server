@@ -37,7 +37,8 @@ public class ChallengeController {
 
     //챌린지 참가 요청
     @PostMapping("/challenge/join")
-    public ResponseEntity<?> challengeJoinRequest(@RequestBody @Valid ChallengeJoinRequestDto requestDto, BindingResult bindingResult) {
+    public ResponseEntity<?> challengeJoinRequest
+    (@RequestBody @Valid ChallengeJoinRequestDto requestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String defaultMessage = bindingResult.getAllErrors()
                                                  .get(0)

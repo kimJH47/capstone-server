@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class BucketApiTest {
-
+/*
 
     @Autowired
     private MockMvc mockMvc;
@@ -142,5 +142,5 @@ class BucketApiTest {
         Assertions.assertEquals(content, "수정된버킷");
     }
 
-
+*/
 }

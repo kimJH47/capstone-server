@@ -79,6 +79,8 @@ public class BucketService {
         bucket.setModifiedTime(bucketUpdateDto.getUpdateTime());
     }
 
+
+
     @Transactional
     public void updateBucketStatus(BucketStatusUpdateDto bucketStatusUpdateDto, Long bucketId) {
         Bucket bucket = bucketRepository.findById(bucketId)
@@ -87,7 +89,6 @@ public class BucketService {
         bucket.setModifiedTime(bucketStatusUpdateDto.getUpdateTime());
 
     }
-
 
     public void updateBucket(BucketUpdateDto updateDto, Long BucketId) {
         Bucket bucket = bucketRepository.findById(BucketId)

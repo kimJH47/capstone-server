@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 public class SubBucketApiTest {
-
+/*
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -106,4 +106,5 @@ public class SubBucketApiTest {
 
 
     }
+ */
 }

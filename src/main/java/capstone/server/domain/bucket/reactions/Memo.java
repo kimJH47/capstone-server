@@ -1,4 +1,4 @@
-package capstone.server.domain.bucket.reaction;
+package capstone.server.domain.bucket.reactions;
 
 
 import capstone.server.domain.User;
