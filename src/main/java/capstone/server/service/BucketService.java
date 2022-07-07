@@ -83,6 +83,8 @@ public class BucketService {
         return bucket.getId();
     }
 
+
+
     @Transactional
     public Long updateBucketStatus(BucketStatusUpdateDto bucketStatusUpdateDto) {
         Bucket bucket = bucketRepository.findById(bucketStatusUpdateDto.getBucketId())
@@ -91,7 +93,6 @@ public class BucketService {
         return bucket.getId();
 
     }
-
 
     public void updateBucket(BucketUpdateDto updateDto, Long BucketId) {
         Bucket bucket = bucketRepository.findById(BucketId)

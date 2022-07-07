@@ -108,6 +108,20 @@ public class BucketController {
                              .body("버킷 내용이 업데이트 되었습니다");
     }
 
+    @PutMapping("/buckets/{id}/like")
+    public ResponseEntity<?> updateBucketLike
+            (@PathVariable("id") Long id, @Valid @RequestBody BucketStatusUpdateDto updateDto,BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String defaultMessage = bindingResult.getAllErrors()
+                    .get(0)
+                    .getDefaultMessage();
+            return new ResponseEntity<>(defaultMessage, HttpStatus.BAD_REQUEST);
+        }
+        bucketService.updateBucketStatus(updateDto, id);
+        return ResponseEntity.ok()
+                .body("버킷 내용이 업데이트 되었습니다");
+    }
+
     //업데이트 api 를 하나로 처리하는게 정상아닌가?
     @PutMapping("/buckets/{id}/update")
     public ResponseEntity<?> updateBucket(@PathVariable("id") Long id, BucketUpdateDto updateDto, BindingResult bindingResult) {

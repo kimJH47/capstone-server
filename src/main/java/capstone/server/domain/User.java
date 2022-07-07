@@ -1,6 +1,7 @@
 package capstone.server.domain;
 
 
+import capstone.server.domain.bucket.reactions.Heart;
 import capstone.server.oauth.entity.ProviderType;
 import capstone.server.oauth.entity.RoleType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -58,7 +60,7 @@ public class User extends BaseTimeEntity{
     @OneToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
-    @Column
+
 
     public void changeProfile(Profile profile) {
         this.profile = profile;
