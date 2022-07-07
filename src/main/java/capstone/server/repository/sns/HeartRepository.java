@@ -10,4 +10,4 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface HeartRepository extends JpaRepository<Heart,Long> {
     Optional<Heart> findByUserAndBucket(User user, Bucket bucket);
-
+}
