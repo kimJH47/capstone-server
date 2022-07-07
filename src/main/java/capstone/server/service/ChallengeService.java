@@ -146,10 +146,9 @@ public class ChallengeService {
 
 
     }
-    //챌린지 참가신청유저 조회( RoleType이 ADMIN 만 사용가능
+    //챌린지 참가신청유저 조회( RoleType이 ADMIN 만 사용가능)
     @Transactional(readOnly = true)
     public List<ChallengeResponseDto> searchChallenges(ChallengeSearch challengeSearch) {
-
         if (challengeSearch.getTagList()
                            .isEmpty()) {
             return challengeRepository.searchChallenge(challengeSearch)
