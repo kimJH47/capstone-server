@@ -104,6 +104,8 @@ public class ChallengeController {
     //유저 챌린지 참가 수락(또는 거절)
     //챌린지 참가 여부 조회
 
+
+
     //챌린지 단건조회
     @GetMapping("/challenges/{id}")
     public ResponseEntity<?> findOne(@PathVariable("id") Long id) {

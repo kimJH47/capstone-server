@@ -274,8 +274,6 @@ public class ChallengeApiTest {
     private Challenge getChallengeWithTag(Long id, String title, String content, User user) {
         Challenge challenge = Challenge.builder()
                                        .tagList(new ArrayList<>())
-                                       .uploadTime(LocalDateTime.now())
-                                       .modifiedTime(LocalDateTime.now())
                                        .maxJoinNum(10)
                                        .challengeStatus(BucketStatus.ONGOING)
                                        .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)

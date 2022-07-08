@@ -9,6 +9,7 @@ import lombok.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class ChallengeSaveRequestDto {
     private BucketPrivacyStatus challengePrivacyStatus;
     private List<String> tagList;
     private List<SubChallengeSaveRequestDto> subChallengeSaveRequestDtoList;
+    private LocalDateTime targetDate;
 
     public Challenge toEntity() {
         /**
@@ -43,6 +45,7 @@ public class ChallengeSaveRequestDto {
                         .challengeStatus(BucketStatus.ONGOING)
                         .challengePrivacyStatus(this.getChallengePrivacyStatus())
                         .tagList(new ArrayList<>())
+                        .targetDate(targetDate)
                         .build();
     }
 }

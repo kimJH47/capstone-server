@@ -122,8 +122,6 @@ public class ChallengeRepositoryTest {
 
         return Challenge.builder()
                         .tagList(new ArrayList<>())
-                        .uploadTime(LocalDateTime.now())
-                        .modifiedTime(LocalDateTime.now())
                         .maxJoinNum(10)
                         .challengeStatus(BucketStatus.ONGOING)
                         .challengePrivacyStatus(BucketPrivacyStatus.PUBLIC)

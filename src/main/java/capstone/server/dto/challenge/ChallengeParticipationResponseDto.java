@@ -26,7 +26,6 @@ public class ChallengeParticipationResponseDto {
     private JoinStatus joinStatus;
     @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime requestTime;
-
     public ChallengeParticipationResponseDto(ChallengeParticipation challengeParticipation) {
 
         this.challengeId = challengeParticipation.getChallenge()

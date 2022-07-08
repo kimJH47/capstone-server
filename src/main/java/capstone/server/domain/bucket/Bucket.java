@@ -1,5 +1,6 @@
 package capstone.server.domain.bucket;
 
+import capstone.server.domain.BaseTimeEntity;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.reactions.Heart;
 import capstone.server.dto.bucket.BucketUpdateDto;
@@ -17,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Bucket {
+public class Bucket extends BaseTimeEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -37,10 +38,6 @@ public class Bucket {
     private BucketStatus bucketStatus;
     @Enumerated(EnumType.STRING)
     private BucketPrivacyStatus bucketPrivacyStatus;
-
-    private LocalDateTime uploadTime;
-    private LocalDateTime modifiedTime;
-
     private LocalDateTime targetDate;
     //조회편의성을 위해 양방향 구현
     @OneToMany(mappedBy = "id",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
@@ -63,13 +60,8 @@ public class Bucket {
         this.content = content;
     }
 
-    public void setModifiedTime(LocalDateTime modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
-
     public void update(BucketUpdateDto updateDto) {
         this.content = updateDto.getContent();
-        this.modifiedTime = updateDto.getModifiedTime();
         this.bucketStatus = updateDto.getBucketStatus();
         this.bucketPrivacyStatus = updateDto.getBucketPrivacyStatus();
     }

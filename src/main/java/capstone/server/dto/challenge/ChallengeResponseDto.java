@@ -22,7 +22,8 @@ public class ChallengeResponseDto {
     private Integer maxJoinNum;
     private LocalDateTime uploadTime;
     private LocalDateTime modifiedTime;
-
+    private List<SubChallengeResponseDto> subChallengeResponseDtoList;
+    private LocalDateTime targetDate;
     private List<String> tagList;
 
     public ChallengeResponseDto(Challenge challenge) {
@@ -34,6 +35,12 @@ public class ChallengeResponseDto {
         this.maxJoinNum = challenge.getMaxJoinNum();
         this.uploadTime = challenge.getUploadTime();
         this.modifiedTime = challenge.getModifiedTime();
+        this.targetDate = challenge.getTargetDate();
 
+
+    }
+
+    public void changeSubCallengeDtos(List<SubChallengeResponseDto> dtos) {
+        this.subChallengeResponseDtoList = dtos;
     }
 }

@@ -1,6 +1,7 @@
 package capstone.server.domain.challenge;
 
 
+import capstone.server.domain.BaseTimeEntity;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
@@ -19,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Challenge {
+public class Challenge extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +38,7 @@ public class Challenge {
     @Enumerated(EnumType.STRING)
     private BucketStatus challengeStatus;
     private Integer maxJoinNum;
-    private LocalDateTime uploadTime;
-    private LocalDateTime modifiedTime;
-
+    private LocalDateTime targetDate;
     //태그검색시 사용
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id",cascade = CascadeType.ALL)
     private List<ChallengeTag> tagList = new ArrayList<>();

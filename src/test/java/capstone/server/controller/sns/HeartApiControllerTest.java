@@ -23,8 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -126,8 +124,6 @@ public class HeartApiControllerTest {
                 .bucketStatus(BucketStatus.ONGOING)
                 .bucketPrivacyStatus(BucketPrivacyStatus.PUBLIC)
                 .user(user)
-                .uploadTime(LocalDateTime.now())
-                .modifiedTime(LocalDateTime.now())
                 .build();
 
         Bucket save = bucketRepository.save(bucket);

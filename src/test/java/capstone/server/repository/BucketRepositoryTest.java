@@ -145,8 +145,6 @@ class BucketRepositoryTest {
     private Bucket getBucket(String content, BucketPrivacyStatus status,User user) {
         return Bucket.builder()
                      .targetDate(LocalDateTime.now())
-                     .modifiedTime(LocalDateTime.now())
-                     .uploadTime(LocalDateTime.now())
                      .bucketPrivacyStatus(status)
                      .content(content)
                      .user(user)

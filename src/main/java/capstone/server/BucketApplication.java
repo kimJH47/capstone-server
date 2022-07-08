@@ -13,7 +13,6 @@ public class BucketApplication {
 //			+ "classpath:application-aws.yml";
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(BucketApplication.class, args);
 
 
