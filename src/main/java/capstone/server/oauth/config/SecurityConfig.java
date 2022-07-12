@@ -32,7 +32,6 @@ import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Configuration
-//@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsProperties corsProperties;
