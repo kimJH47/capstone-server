@@ -30,6 +30,19 @@ public class CommentApiController {
 
     }
 
+    @PutMapping("/comment/{bucketId}")
+    public ResponseEntity<String> updateComment(
+            @RequestBody @Valid CommentDto commentDto,
+            @PathVariable Long bucketId){
+
+        boolean result = false;
+
+        result = commentService.updateComment(commentDto.getUserSeq(),commentDto.getCommentId(),commentDto.getContent());
+
+        return result ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+    }
+
     @DeleteMapping("/comment/{bucketId}")
     public ResponseEntity<String> deleteComment(
             @RequestBody @Valid CommentDto commentDto,

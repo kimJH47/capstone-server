@@ -31,8 +31,7 @@ import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
@@ -107,6 +106,41 @@ public class CommentApiControllerTest {
 
         Assertions.assertThat(comments.size()).isEqualTo(2);
         Assertions.assertThat(comments.get(0).getId()).isNotEqualTo(comments.get(1).getId());
+    }
+
+    @DisplayName("커멘트 수정 테스트")
+    @WithMockUser
+    @Test
+    void 커멘트_수정() throws Exception{
+
+        User user = addUser();
+
+        Bucket bucket = addBucket(user);
+
+        String test = "테스트 문구";
+
+        CommentDto commentDto = CommentDto.builder()
+                .userSeq(user.getUserSeq())
+                .content(test)
+                .build();
+
+        mockMvc.perform(post("/comment/"+bucket.getId()).contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(commentDto))
+                .with(csrf())).andExpect(status().isOk());
+
+        CommentDto updateDto = CommentDto.builder()
+                .userSeq(user.getUserSeq())
+                .commentId(commentRepository.findAll().get(0).getId())
+                .content(test+"hand")
+                .build();
+
+        mockMvc.perform(put("/comment/"+bucket.getId()).contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateDto))
+                .with(csrf())).andExpect(status().isOk());
+
+        Comment comment = commentRepository.findAll().get(0);
+
+        Assertions.assertThat(comment.getContent().equals(test)).isFalse();
     }
 
     @DisplayName("커멘트 삭제 테스트")

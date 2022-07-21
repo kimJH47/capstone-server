@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -34,6 +36,19 @@ public class CommentService {
 
         if(user.getUserSeq().equals(comment.getUser().getUserSeq())){
             commentRepository.delete(comment);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean updateComment(Long userId,Long commentId,String content){
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저 존재하지않음"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("코멘트 존재하지않음"));
+
+        if(user.getUserSeq().equals(comment.getUser().getUserSeq())){
+            comment.setContent(content);
+            commentRepository.save(comment);
             return true;
         }else{
             return false;
