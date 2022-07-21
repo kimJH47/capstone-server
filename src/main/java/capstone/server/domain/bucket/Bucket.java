@@ -40,7 +40,7 @@ public class Bucket extends BaseTimeEntity {
     private BucketPrivacyStatus bucketPrivacyStatus;
     private LocalDateTime targetDate;
     //조회편의성을 위해 양방향 구현
-    @OneToMany(mappedBy = "id",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bucket",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<SubBucket> subBucketList = new ArrayList<>();
 
     //setter
