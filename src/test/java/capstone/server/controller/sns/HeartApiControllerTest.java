@@ -1,6 +1,5 @@
 package capstone.server.controller.sns;
 
-import capstone.server.basic.WithMockCustomOAuth2Account;
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;

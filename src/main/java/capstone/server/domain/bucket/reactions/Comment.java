@@ -3,6 +3,7 @@ package capstone.server.domain.bucket.reactions;
 
 import capstone.server.domain.User;
 import capstone.server.domain.bucket.Bucket;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Comment {
 
     @Id
@@ -28,7 +30,12 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-
+    public Comment(User user,Bucket bucket,String content){
+        this.user = user;
+        this.content = content;
+        this.bucket = bucket;
+        this.uploadTime = LocalDateTime.now();
+    }
 
 
 

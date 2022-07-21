@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class CommentDto {
+public class MemoDto {
     private Long userSeq;
     String content;
 }

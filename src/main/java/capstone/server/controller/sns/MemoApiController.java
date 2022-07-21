@@ -1,33 +1,30 @@
 package capstone.server.controller.sns;
 
-import capstone.server.dto.sns.CommentDto;
-import capstone.server.dto.sns.HeartDto;
+import capstone.server.dto.sns.MemoDto;
 import capstone.server.service.sns.CommentService;
+import capstone.server.service.sns.MemoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class CommentApiController {
-    private final CommentService commentService;
+public class MemoApiController {
+    private final MemoService memoService;
 
-    @PostMapping("/comment/{bucketId}")
-    public ResponseEntity<String> addHeart(
-            @RequestBody @Valid CommentDto commentDto,
+    @PostMapping("/memo/{bucketId}")
+    public ResponseEntity<String> addMemo(
+            @RequestBody @Valid MemoDto memoDto,
             @PathVariable Long bucketId){
 
         boolean result = false;
 
-        result = commentService.addComment(commentDto.getUserSeq(),bucketId,commentDto.getContent());
+        result = memoService.addMemo(memoDto.getUserSeq(),bucketId,memoDto.getContent());
 
         return result ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 

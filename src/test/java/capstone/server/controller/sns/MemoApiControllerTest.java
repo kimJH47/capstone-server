@@ -5,15 +5,15 @@ import capstone.server.domain.bucket.Bucket;
 import capstone.server.domain.bucket.BucketPrivacyStatus;
 import capstone.server.domain.bucket.BucketStatus;
 import capstone.server.domain.bucket.reactions.Comment;
-import capstone.server.domain.bucket.reactions.Heart;
+import capstone.server.domain.bucket.reactions.Memo;
 import capstone.server.dto.sns.CommentDto;
-import capstone.server.dto.sns.HeartDto;
+import capstone.server.dto.sns.MemoDto;
 import capstone.server.oauth.entity.ProviderType;
 import capstone.server.oauth.entity.RoleType;
 import capstone.server.repository.UserRepository;
 import capstone.server.repository.bucket.BucketRepository;
-
 import capstone.server.repository.sns.CommentRepository;
+import capstone.server.repository.sns.MemoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -37,11 +37,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest
-public class CommentApiControllerTest {
+public class MemoApiControllerTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    CommentRepository commentRepository;
+    MemoRepository memoRepository;
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -50,10 +50,10 @@ public class CommentApiControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DisplayName("커멘트 1개 테스트")
+    @DisplayName("메모 1개 테스트")
     @WithMockUser
     @Test
-    void testCreateComment() throws Exception{
+    void testCreateMemo() throws Exception{
 
         User user = addUser();
 
@@ -61,51 +61,50 @@ public class CommentApiControllerTest {
 
         String test = "테스트 문구";
 
-        CommentDto commentDto = CommentDto.builder()
+        MemoDto memoDto = MemoDto.builder()
                 .userSeq(user.getUserSeq())
                 .content(test)
                 .build();
 
-        mockMvc.perform(post("/comment/"+bucket.getId()).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(commentDto))
+        mockMvc.perform(post("/memo/"+bucket.getId()).contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(memoDto))
                 .with(csrf())).andExpect(status().isOk());
 
-        Comment comment = commentRepository.findAll().get(0);
+        Memo memo = memoRepository.findAll().get(0);
 
-        assertNotNull(comment);
-        assertNotNull(comment.getUser().getUserSeq());
-        Assertions.assertThat(comment.getContent()).isEqualTo(test);
-        assertNotNull(comment.getBucket().getId());
+        assertNotNull(memo);
+        assertNotNull(memo.getUser().getUserSeq());
+        Assertions.assertThat(memo.getContent()).isEqualTo(test);
+        assertNotNull(memo.getBucket().getId());
     }
 
-    @DisplayName("다중 커멘트 테스트")
+    @DisplayName("다중 메모 테스트")
     @WithMockUser
     @Test
     void testCreateMultipleComment() throws Exception{
-
         User user = addUser();
 
         Bucket bucket = addBucket(user);
 
         String test = "테스트 문구";
 
-        CommentDto commentDto = CommentDto.builder()
+        MemoDto memoDto = MemoDto.builder()
                 .userSeq(user.getUserSeq())
                 .content(test)
                 .build();
 
-        mockMvc.perform(post("/comment/"+bucket.getId()).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(commentDto))
+        mockMvc.perform(post("/memo/"+bucket.getId()).contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(memoDto))
                 .with(csrf())).andExpect(status().isOk());
-        mockMvc.perform(post("/comment/"+bucket.getId()).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(commentDto))
+        mockMvc.perform(post("/memo/"+bucket.getId()).contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(memoDto))
                 .with(csrf())).andExpect(status().isOk());
 
-        List<Comment> comments = commentRepository.findAll();
+        List<Memo> memos = memoRepository.findAll();
 
 
-        Assertions.assertThat(comments.size()).isEqualTo(2);
-        Assertions.assertThat(comments.get(0).getId()).isNotEqualTo(comments.get(1).getId());
+        Assertions.assertThat(memos.size()).isEqualTo(2);
+        Assertions.assertThat(memos.get(0).getId()).isNotEqualTo(memos.get(1).getId());
     }
 
     private User addUser(){

@@ -1,13 +1,12 @@
 package capstone.server.controller.sns;
 
-import capstone.server.domain.User;
+import capstone.server.dto.sns.CommentDto;
 import capstone.server.dto.sns.HeartDto;
-import capstone.server.service.sns.HeartService;
+import capstone.server.service.sns.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,17 +14,30 @@ import javax.validation.Valid;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class HeartApiController {
-    private final HeartService heartService;
+public class CommentApiController {
+    private final CommentService commentService;
 
-    @PostMapping("/heart/{bucketId}")
-    public ResponseEntity<String> addHeart(
-            @RequestBody @Valid HeartDto heartDto,
+    @PostMapping("/comment/{bucketId}")
+    public ResponseEntity<String> addComment(
+            @RequestBody @Valid CommentDto commentDto,
             @PathVariable Long bucketId){
 
         boolean result = false;
 
-        result = heartService.addHeart(heartDto.getUserSeq(),bucketId);
+        result = commentService.addComment(commentDto.getUserSeq(),bucketId,commentDto.getContent());
+
+        return result ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @DeleteMapping("/comment/{bucketId}")
+    public ResponseEntity<String> deleteComment(
+            @RequestBody @Valid CommentDto commentDto,
+            @PathVariable Long bucketId){
+
+        boolean result = false;
+
+        result = commentService.deleteComment(commentDto.getUserSeq(),commentDto.getCommentId());
 
         return result ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
